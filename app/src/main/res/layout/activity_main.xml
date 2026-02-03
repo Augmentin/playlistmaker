@@ -1,19 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
+    android:background="@color/blue"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/main_padding_top"
+    android:paddingLeft="@dimen/main_padding_left"
+    android:paddingRight="@dimen/main_padding_right"
+    android:paddingBottom="@dimen/main_padding_bottom"
+    >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="start"
+        android:text="@string/title"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue"
+        android:orientation="vertical"
+        >
+        <Button
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            app:icon="@drawable/search"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/activity_main_icon_padding"
+            android:text="@string/search"
+            android:textSize="@dimen/activity_main_text_size"
+            app:iconTint="@color/black"
+            app:cornerRadius="@dimen/radius_button"
+            />
+        <Button
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            app:icon="@drawable/media"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/activity_main_icon_padding"
+            android:text="@string/media"
+            android:textSize="@dimen/activity_main_text_size"
+            app:iconTint="@color/black"
+            app:cornerRadius="@dimen/radius_button"
+            />
+        <Button
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            app:icon="@drawable/settings"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/activity_main_icon_padding"
+            android:text="@string/settings"
+            android:textSize="@dimen/activity_main_text_size"
+            app:iconTint="@color/black"
+            app:cornerRadius="@dimen/radius_button"
+            />
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

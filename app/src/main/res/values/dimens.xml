@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_text_size">24sp</dimen>
+    <dimen name="medium_padding">8dp</dimen>
+    <dimen name="radius_button">16dp</dimen>
+
+    <dimen name="image_layout_width">24dp</dimen>
+    <dimen name="image_layout_height">24dp</dimen>
+
+    <dimen name="main_padding_top">10dp</dimen>
+    <dimen name="main_padding_left">15dp</dimen>
+    <dimen name="main_padding_right">15dp</dimen>
+    <dimen name="main_padding_bottom">20dp</dimen>
+
+
+    <dimen name="activity_main_icon_padding">10dp</dimen>
+    <dimen name="activity_main_text_size">22sp</dimen>
+
+
+    <dimen name="title_size">22sp</dimen>
+
+    <dimen name="activity_settings_text_size">16sp</dimen>
+    <dimen name="activity_settings_text_margin_right">24dp</dimen>
+    <dimen name="activity_settings_list_padding_top">10dp</dimen>
+    <dimen name="activity_settings_list_padding_bottom">10dp</dimen>
+</resources>
