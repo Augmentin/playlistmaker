@@ -5,7 +5,7 @@
     <dimen name="radius_button">16dp</dimen>
 
     <dimen name="image_layout_width">24dp</dimen>
-    <dimen name="image_layout_height">24dp</dimen>
+    <dimen name="image_layout_height">34dp</dimen>
 
     <dimen name="main_padding_top">10dp</dimen>
     <dimen name="main_padding_left">15dp</dimen>

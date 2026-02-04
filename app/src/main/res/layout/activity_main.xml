@@ -18,7 +18,7 @@
         android:text="@string/title"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +27,7 @@
         android:orientation="vertical"
         >
         <Button
+            android:id="@+id/search_btn"
             android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -42,6 +43,7 @@
             app:cornerRadius="@dimen/radius_button"
             />
         <Button
+            android:id="@+id/media_btn"
             android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -57,6 +59,7 @@
             app:cornerRadius="@dimen/radius_button"
             />
         <Button
+            android:id="@+id/settings_btn"
             android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="0dp"
