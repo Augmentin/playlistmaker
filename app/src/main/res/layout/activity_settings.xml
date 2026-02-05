@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="@dimen/image_layout_width"
             android:layout_height="@dimen/image_layout_height"
-
+            android:id="@+id/back_arrow"
             android:layout_gravity="center"
             android:src="@drawable/arrow_back"
             />

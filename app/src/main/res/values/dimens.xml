@@ -7,7 +7,7 @@
     <dimen name="image_layout_width">24dp</dimen>
     <dimen name="image_layout_height">34dp</dimen>
 
-    <dimen name="main_padding_top">10dp</dimen>
+    <dimen name="main_padding_top">20dp</dimen>
     <dimen name="main_padding_left">15dp</dimen>
     <dimen name="main_padding_right">15dp</dimen>
     <dimen name="main_padding_bottom">20dp</dimen>
