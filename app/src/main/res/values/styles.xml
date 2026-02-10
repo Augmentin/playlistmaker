@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <style name="MainButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textSize">@dimen/activity_main_text_size</item>
+        <item name="iconTint">@color/black</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/activity_main_icon_padding</item>
+    </style>
+    <style name="SearchMainButton" parent="MainButton">
+        <item name="icon">@drawable/search</item>
+    </style>
+    <style name="MediaMainButton" parent="MainButton" >
+        <item name="icon">@drawable/media</item>
+    </style>
+    <style name="SettingsMainButton" parent="MainButton">
+        <item name="icon">@drawable/settings</item>
+    </style>
+</resources>
+
