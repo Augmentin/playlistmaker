@@ -5,64 +5,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
     >
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:navigationIcon="@drawable/arrow_back"
-        style="@style/ToolbarSettingsText"
+        style="@style/ToolbarMainText"
         android:id="@+id/back_toolbar"
         app:title="@string/settings"
+
         />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_dark_theme"
-        android:textSize="@dimen/activity_settings_text_size"
         android:layout_marginTop="@dimen/margin_from_toolbar"
         android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:paddingVertical="@dimen/setting_padding_vertical"
-        android:gravity="center_vertical"
         android:checked="true"
-        android:fontFamily="@font/ys_display_medium"
-        android:textFontWeight="400"
+        style="@style/SettingMenuItem"
         />
+
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/settings_share_app"
         android:drawableEnd="@drawable/sharing"
         android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:paddingVertical="@dimen/setting_padding_vertical"
-        android:text="@string/settings_share_app"
-        android:textColor="@color/black"
-        android:textSize="@dimen/activity_settings_text_size"
-        android:fontFamily="@font/ys_display_medium"
-        android:textFontWeight="400"
+
+        style="@style/SettingMenuItem"
         />
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/settings_support"
         android:drawableEnd="@drawable/support"
         android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:paddingVertical="@dimen/setting_padding_vertical"
-        android:text="@string/settings_support"
-        android:textColor="@color/black"
-        android:fontFamily="@font/ys_display_medium"
-        android:textFontWeight="400"
-        android:textSize="@dimen/activity_settings_text_size" />
+
+        style="@style/SettingMenuItem" />
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/settings_agreement"
         android:drawableEnd="@drawable/arrow_forward"
         android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:paddingVertical="@dimen/setting_padding_vertical"
-        android:text="@string/settings_agreement"
-        android:textColor="@color/black"
-        android:fontFamily="@font/ys_display_medium"
-        android:textFontWeight="400"
-        android:textSize="@dimen/activity_settings_text_size" />
+        style="@style/SettingMenuItem" />
 
 </LinearLayout>

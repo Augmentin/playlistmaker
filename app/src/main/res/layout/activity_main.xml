@@ -1,49 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
     android:orientation="vertical"
-    android:id="@+id/main"
-    android:paddingBottom="@dimen/main_padding_bottom"
-    >
+    android:paddingBottom="@dimen/main_padding_bottom">
+
     <com.google.android.material.appbar.MaterialToolbar
-        app:title="@string/title"
         style="@style/ToolbarMainText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <Button
-        android:layout_marginTop="@dimen/margin_from_toolbar"
-        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:id="@+id/search_btn"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/search"
-        style="@style/SearchMainButton"
-    />
-    <Button
-        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:id="@+id/media_btn"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/media"
-        style="@style/MediaMainButton"
-        />
-    <Button
-        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:id="@+id/settings_btn"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/settings"
-        style="@style/SettingsMainButton"
-        />
+        app:title="@string/title" />
 
+    <Button
+        android:id="@+id/search_btn"
+        style="@style/SearchMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+        android:layout_marginTop="@dimen/margin_from_toolbar"
+        android:layout_weight="1"
+        android:text="@string/search" />
+
+    <Button
+        android:id="@+id/media_btn"
+        style="@style/MediaMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+        android:layout_weight="1"
+        android:text="@string/media" />
+
+    <Button
+        android:id="@+id/settings_btn"
+        style="@style/SettingsMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+        android:layout_weight="1"
+        android:text="@string/settings" />
 
 
 </LinearLayout>

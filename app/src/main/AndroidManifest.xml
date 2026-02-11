@@ -20,7 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity  android:name=".SettingsActivity" android:exported="false"/>
+        <activity  android:name=".SettingsActivity" android:exported="false"
+            android:theme="@style/Theme.PlaylistMaker.Settings"/>
         <activity
             android:name=".MediaLibraryActivity"
             android:exported="false" />
