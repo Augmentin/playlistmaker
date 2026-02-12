@@ -4,9 +4,9 @@
         <item name="android:textFontWeight">500</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">22sp</item>
-        <item name="titleTextColor">?attr/title_text_color</item>
     </style>
     <style name="ToolbarMainText" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="titleTextAppearance">@style/TitleTextAppearance</item>
+        <item name="titleTextColor">?attr/title_text_color</item>
     </style>
 </resources>
