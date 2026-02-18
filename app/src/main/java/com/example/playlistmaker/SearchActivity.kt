@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 
+
 class SearchActivity : AppCompatActivity() {
 
     private var current_search: String = STRING_DEF

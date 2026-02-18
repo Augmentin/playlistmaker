@@ -7,7 +7,7 @@
         android:width="1dp"
         android:color="?attr/search_input_background" />
 
-    <corners android:radius="16dp"/>
+    <corners android:radius="8dp"/>
 
     <padding
         android:left="12dp"

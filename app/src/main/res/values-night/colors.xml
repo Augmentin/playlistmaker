@@ -2,5 +2,4 @@
 <resources>
     <color name="arrow_back_color">@color/white</color>
     <color name="menu_icon_color">@color/white</color>
-    <color name="search_icon_color">@color/black</color>
 </resources>

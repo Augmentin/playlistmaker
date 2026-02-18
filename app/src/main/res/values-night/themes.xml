@@ -16,5 +16,6 @@
         <item name="title_text_color">@color/white</item>
         <item name="search_input_background">@color/white</item>
         <item name="search_text_color">@color/black</item>
+        <item name="search_icon">@color/black</item>
     </style>
 </resources>

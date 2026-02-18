@@ -16,4 +16,6 @@
     <dimen name="main_text_size">22sp</dimen>
     <dimen name="settings_text_size">16sp</dimen>
 
+    <dimen name="search_hint_size">12sp</dimen>
+
 </resources>
