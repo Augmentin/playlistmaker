@@ -16,4 +16,8 @@
     <color name="thumb_off_color">@color/white</color>
     <color name="track_on_color">#9FBBF3</color>
     <color name="track_off_color">#9D9B9B</color>
+
+    <color name="light_grey">#E6E8EB</color>
+    <color name="dark_grey">#AEAFB4</color>
+    <color name="search_icon_color">#AEAFB4</color>
 </resources>
