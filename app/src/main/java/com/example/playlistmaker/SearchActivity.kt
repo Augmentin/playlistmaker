@@ -93,14 +93,4 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideKeyboardAndClearFocus(editText: EditText) {
-        // 1. Получаем InputMethodManager
-        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        // 2. Скрываем клавиатуру
-        imm.hideSoftInputFromWindow(editText.windowToken, 0)
-
-        // 3. Убираем фокус с EditText
-        editText.clearFocus()
-    }
 }
