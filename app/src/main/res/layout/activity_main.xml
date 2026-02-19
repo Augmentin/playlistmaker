@@ -1,74 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
     android:orientation="vertical"
-    android:id="@+id/main"
-    android:paddingBottom="@dimen/main_padding_bottom"
-    >
+    android:paddingBottom="@dimen/main_padding_bottom">
+
     <com.google.android.material.appbar.MaterialToolbar
-        app:titleTextAppearance="@style/ToolbarMainText"
+        style="@style/ToolbarMainText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/title"
-        app:titleTextColor="@color/white"
-        />
-    <Button
-        android:layout_marginTop="@dimen/margin_from_toolbar"
-        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:id="@+id/search_btn"
-        android:textAllCaps="false"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        app:icon="@drawable/search"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/activity_main_icon_padding"
-        android:text="@string/search"
-        android:textSize="@dimen/activity_main_text_size"
-        app:iconTint="@color/black"
-        app:cornerRadius="@dimen/radius_button"
-        />
-    <Button
-        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:id="@+id/media_btn"
-        android:textAllCaps="false"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        app:icon="@drawable/media"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/activity_main_icon_padding"
-        android:text="@string/media"
-        android:textSize="@dimen/activity_main_text_size"
-        app:iconTint="@color/black"
-        app:cornerRadius="@dimen/radius_button"
-        />
-    <Button
-        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-        android:id="@+id/settings_btn"
-        android:textAllCaps="false"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        app:icon="@drawable/settings"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/activity_main_icon_padding"
-        android:text="@string/settings"
-        android:textSize="@dimen/activity_main_text_size"
-        app:iconTint="@color/black"
-        app:cornerRadius="@dimen/radius_button"
-        />
+        app:title="@string/title" />
 
+    <Button
+        android:id="@+id/search_btn"
+        style="@style/SearchMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+        android:layout_marginTop="@dimen/margin_from_toolbar"
+        android:layout_weight="1"
+        android:text="@string/search" />
+
+    <Button
+        android:id="@+id/media_btn"
+        style="@style/MediaMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+        android:layout_weight="1"
+        android:text="@string/media" />
+
+    <Button
+        android:id="@+id/settings_btn"
+        style="@style/SettingsMainButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+        android:layout_weight="1"
+        android:text="@string/settings" />
 
 
 </LinearLayout>

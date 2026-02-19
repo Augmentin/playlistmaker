@@ -12,9 +12,10 @@
     <dimen name="margin_from_toolbar">28dp</dimen>
 
     <dimen name="setting_padding_vertical">20dp</dimen>
-
     <dimen name="activity_main_icon_padding">10dp</dimen>
-    <dimen name="activity_main_text_size">22sp</dimen>
-    <dimen name="activity_settings_text_size">16sp</dimen>
+    <dimen name="main_text_size">22sp</dimen>
+    <dimen name="settings_text_size">16sp</dimen>
+
+    <dimen name="search_hint_size">12sp</dimen>
 
 </resources>

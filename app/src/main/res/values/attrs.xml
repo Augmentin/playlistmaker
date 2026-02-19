@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="title_text_color" format="color" />
+    <attr name="button_text_color" format="color" />
+    <attr name="menu_text_color" format="color" />
+
+    <attr name="search_input_background" format="color" />
+    <attr name="search_text_color" format="color" />
+    <attr name="search_icon" format="color"/>
+</resources>
