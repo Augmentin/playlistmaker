@@ -12,13 +12,13 @@
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/activity_main_icon_padding</item>
     </style>
-    <style name="SearchMainButton" parent="MainButton">
+    <style name="MainButton.Search" >
         <item name="icon">@drawable/search</item>
     </style>
-    <style name="MediaMainButton" parent="MainButton" >
+    <style name="MainButton.Media"  >
         <item name="icon">@drawable/media</item>
     </style>
-    <style name="SettingsMainButton" parent="MainButton">
+    <style name="MainButton.Settings" >
         <item name="icon">@drawable/settings</item>
     </style>
     
