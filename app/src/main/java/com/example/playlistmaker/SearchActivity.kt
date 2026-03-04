@@ -82,8 +82,8 @@ class SearchActivity : AppCompatActivity() {
         current_search = savedInstanceState.getString(SEARCH_STRING, STRING_DEF)
     }
 
-    private fun getTrackList(): ArrayList<Track> {
-        return arrayListOf(
+    private fun getTrackList(): MutableList<Track> {
+        return mutableListOf(
             Track(
                 "Smells Like Teen Spirit",
                 "Nirvana",
