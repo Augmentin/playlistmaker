@@ -1,11 +1,10 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
+
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -13,6 +12,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -24,6 +24,7 @@ class SearchActivity : AppCompatActivity() {
         const val SEARCH_STRING = "SEARCH_STRING"
         const val STRING_DEF = ""
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +63,7 @@ class SearchActivity : AppCompatActivity() {
                 }else{
                     current_search = STRING_DEF
                 }
-                clearButton.visibility = clearButtonVisibility(s)
+                clearButton.isVisible = !s.isNullOrEmpty()
 
             }
 
@@ -86,12 +87,5 @@ class SearchActivity : AppCompatActivity() {
         current_search = savedInstanceState.getString(SEARCH_STRING, STRING_DEF)
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
-    }
 
 }
