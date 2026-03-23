@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.search.data.Track
+import com.example.playlistmaker.network.itunes.TrackData
 
 
-class SongListAdapter(private val data: List<Track>) : RecyclerView.Adapter<SongListViewHolder>() {
+class SongListAdapter(private val data: List<TrackData>) : RecyclerView.Adapter<SongListViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

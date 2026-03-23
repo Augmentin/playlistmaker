@@ -3,9 +3,8 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -15,9 +14,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.network.ItunesClient
 import com.example.playlistmaker.search.SongListAdapter
-import com.example.playlistmaker.search.data.Track
+import com.example.playlistmaker.network.itunes.SearchResponse
+import com.example.playlistmaker.network.itunes.TrackData
+import com.example.playlistmaker.search.SongListViewHolder
 import com.google.android.material.appbar.MaterialToolbar
+import retrofit2.Call
+import retrofit2.Callback
 
 
 class SearchActivity : AppCompatActivity() {
@@ -29,6 +33,8 @@ class SearchActivity : AppCompatActivity() {
         const val STRING_DEF = ""
     }
 
+    private lateinit var adapter : SongListAdapter
+    private val trackList = ArrayList<TrackData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +45,9 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        adapter = SongListAdapter(trackList);
+        val songItems = findViewById<RecyclerView>(R.id.songItems)
+        songItems.adapter = adapter;
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
         back.setNavigationOnClickListener {
             finish()
@@ -56,7 +64,34 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.clearFocus()
         }
 
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
 
+                ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse>{
+                    override fun onResponse(
+                        call: Call<SearchResponse?>?,
+                        response: retrofit2.Response<SearchResponse?>?
+                    ) {
+                        if (response?.code() == 200) {
+                            trackList.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                trackList.addAll(response.body()?.results!!)
+                                adapter.notifyDataSetChanged()
+                            }
+                        }else{
+
+                        }
+
+                    }
+
+                    override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
+                        TODO("Not yet implemented")
+                    }
+                })
+
+            }
+            false
+        }
 
         inputEditText.doOnTextChanged { s: CharSequence?, start: Int, before: Int, count: Int ->
             if (!s.isNullOrEmpty()) {
@@ -67,8 +102,8 @@ class SearchActivity : AppCompatActivity() {
             }
             clearButton.isVisible = !s.isNullOrEmpty()
         }
-        val songItems = findViewById<RecyclerView>(R.id.songItems)
-        songItems.adapter = SongListAdapter(getTrackList())
+
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -82,46 +117,5 @@ class SearchActivity : AppCompatActivity() {
         current_search = savedInstanceState.getString(SEARCH_STRING, STRING_DEF)
     }
 
-    private fun getTrackList(): MutableList<Track> {
-        return mutableListOf(
-            Track(
-                "Smells Like Teen Spirit",
-                "Nirvana",
-                "5:01",
-                "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                "TestSmells Like Teen Spirit Smells Like Teen Spirit Smells Like Teen Spirit Smells Like Teen Spirit",
-                "TESTNirvana Nirvana Nirvana Nirvana Nirvana Nirvana",
-                "5:01",
-                "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            ),
-
-            Track(
-                "Billie Jean",
-                "Michael Jackson",
-                "4:35",
-                "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-            ),
-            Track(
-                "Stayin' Alive",
-                "Bee Gees",
-                "4:10",
-                "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                "Whole Lotta Love",
-                "Led Zeppelin",
-                "5:33",
-                "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-            ),
-            Track(
-                "Sweet Child O'Mine",
-                "Guns N' Roses",
-                "5:03",
-                "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-            ),
-        )
-    }
 
 }
