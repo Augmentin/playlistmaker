@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -36,6 +38,13 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapter : SongListAdapter
     private val trackList = ArrayList<TrackData>()
 
+
+
+    private lateinit var placeholderImg: ImageView
+    private lateinit var placeholderTitle: TextView
+    private lateinit var placeholderMessage: TextView
+    private lateinit var refreshButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -45,7 +54,13 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        adapter = SongListAdapter(trackList);
+
+        placeholderImg = findViewById(R.id.fail_img)
+        placeholderTitle = findViewById(R.id.placeholderTitle)
+        placeholderMessage = findViewById(R.id.placeholderMessage)
+        refreshButton = findViewById(R.id.refresh)
+
+        adapter = SongListAdapter(trackList)
         val songItems = findViewById<RecyclerView>(R.id.songItems)
         songItems.adapter = adapter;
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
@@ -63,32 +78,15 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText("")
             inputEditText.clearFocus()
         }
+        refreshButton.setOnClickListener {
+            hidePlaceholderFields()
+            searchTrack()
+        }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse>{
-                    override fun onResponse(
-                        call: Call<SearchResponse?>?,
-                        response: retrofit2.Response<SearchResponse?>?
-                    ) {
-                        if (response?.code() == 200) {
-                            trackList.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                trackList.addAll(response.body()?.results!!)
-                                adapter.notifyDataSetChanged()
-                            }
-                        }else{
-
-                        }
-
-                    }
-
-                    override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
-                        TODO("Not yet implemented")
-                    }
-                })
-
+                hidePlaceholderFields()
+                searchTrack()
             }
             false
         }
@@ -118,4 +116,53 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
+    private fun searchTrack(){
+        ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse>{
+            override fun onResponse(
+                call: Call<SearchResponse?>?,
+                response: retrofit2.Response<SearchResponse?>?
+            ) {
+                if (response?.code() == 200) {
+                    if (response.body()?.results?.isNotEmpty() == true) {
+                        trackList.clear()
+                        trackList.addAll(response.body()?.results!!)
+                        adapter.notifyDataSetChanged()
+                    }else{
+                        showMessage(getString(R.string.not_found), "", R.drawable.not_found)
+                    }
+                }else{
+                    showMessage(getString(R.string.connect_problem_title), getString(R.string.connect_problem_message), R.drawable.connection_fail)
+                    refreshButton.visibility = View.VISIBLE
+                }
+            }
+            override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
+                showMessage(getString(R.string.error))
+                refreshButton.visibility = View.VISIBLE
+            }
+        })
+    }
+
+    private fun hidePlaceholderFields(){
+        placeholderTitle.visibility = View.GONE
+        placeholderMessage.visibility = View.GONE
+        placeholderImg.visibility = View.GONE
+        refreshButton.visibility = View.GONE
+    }
+    private fun showMessage(textTitle: String, textMessage: String = "", imageResource:Int? = null) {
+        if(textTitle.isNotEmpty()){
+            trackList.clear()
+            adapter.notifyDataSetChanged()
+            placeholderTitle.visibility = View.VISIBLE
+            placeholderTitle.text = textTitle
+            if(textMessage.isNotEmpty()){
+                placeholderMessage.text = textMessage
+                placeholderMessage.visibility = View.VISIBLE
+            }
+            if(imageResource != null){
+                placeholderImg.setImageResource(imageResource)
+                placeholderImg.visibility = View.VISIBLE
+            }
+
+        }
+    }
 }

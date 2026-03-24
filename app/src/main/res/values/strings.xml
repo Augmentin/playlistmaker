@@ -15,4 +15,9 @@
     <string name="support_body" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="practicum_offer_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="search_hint" translatable="false">Поиск</string>
+    <string name="connect_problem_title" translatable="false">Проблемы со связью</string>
+    <string name="connect_problem_message" translatable="false">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="not_found" translatable="false">Ничего не нашлось</string>
+    <string name="error" translatable="false">Что-то пошло не так</string>
+    <string name="refresh" translatable="false">Обновить</string>
 </resources>
