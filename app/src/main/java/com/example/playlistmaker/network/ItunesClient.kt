@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
+
 // тест ошибки
 class ErrorInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -28,11 +29,11 @@ class ErrorInterceptor : Interceptor {
             .build()
     }
 }
+
 object ItunesClient {
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
-
 
 
     private val okHttpClient = OkHttpClient.Builder()

@@ -7,7 +7,8 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.network.itunes.TrackData
 
 
-class SongListAdapter(private val data: List<TrackData>) : RecyclerView.Adapter<SongListViewHolder>() {
+class SongListAdapter(private val data: List<TrackData>) :
+    RecyclerView.Adapter<SongListViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

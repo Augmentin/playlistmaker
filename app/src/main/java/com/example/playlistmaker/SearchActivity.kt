@@ -35,9 +35,8 @@ class SearchActivity : AppCompatActivity() {
         const val STRING_DEF = ""
     }
 
-    private lateinit var adapter : SongListAdapter
+    private lateinit var adapter: SongListAdapter
     private val trackList = ArrayList<TrackData>()
-
 
 
     private lateinit var placeholderImg: ImageView
@@ -116,8 +115,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    private fun searchTrack(){
-        ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse>{
+    private fun searchTrack() {
+        ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse?>?,
                 response: retrofit2.Response<SearchResponse?>?
@@ -127,14 +126,19 @@ class SearchActivity : AppCompatActivity() {
                         trackList.clear()
                         trackList.addAll(response.body()?.results!!)
                         adapter.notifyDataSetChanged()
-                    }else{
+                    } else {
                         showMessage(getString(R.string.not_found), "", R.drawable.not_found)
                     }
-                }else{
-                    showMessage(getString(R.string.connect_problem_title), getString(R.string.connect_problem_message), R.drawable.connection_fail)
+                } else {
+                    showMessage(
+                        getString(R.string.connect_problem_title),
+                        getString(R.string.connect_problem_message),
+                        R.drawable.connection_fail
+                    )
                     refreshButton.visibility = View.VISIBLE
                 }
             }
+
             override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
                 showMessage(getString(R.string.error))
                 refreshButton.visibility = View.VISIBLE
@@ -142,23 +146,28 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun hidePlaceholderFields(){
+    private fun hidePlaceholderFields() {
         placeholderTitle.visibility = View.GONE
         placeholderMessage.visibility = View.GONE
         placeholderImg.visibility = View.GONE
         refreshButton.visibility = View.GONE
     }
-    private fun showMessage(textTitle: String, textMessage: String = "", imageResource:Int? = null) {
-        if(textTitle.isNotEmpty()){
+
+    private fun showMessage(
+        textTitle: String,
+        textMessage: String = "",
+        imageResource: Int? = null
+    ) {
+        if (textTitle.isNotEmpty()) {
             trackList.clear()
             adapter.notifyDataSetChanged()
             placeholderTitle.visibility = View.VISIBLE
             placeholderTitle.text = textTitle
-            if(textMessage.isNotEmpty()){
+            if (textMessage.isNotEmpty()) {
                 placeholderMessage.text = textMessage
                 placeholderMessage.visibility = View.VISIBLE
             }
-            if(imageResource != null){
+            if (imageResource != null) {
                 placeholderImg.setImageResource(imageResource)
                 placeholderImg.visibility = View.VISIBLE
             }

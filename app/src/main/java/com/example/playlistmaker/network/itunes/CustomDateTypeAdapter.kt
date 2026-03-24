@@ -1,4 +1,5 @@
 package com.example.playlistmaker.network.itunes
+
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
@@ -24,14 +25,17 @@ class CustomDateTypeAdapter : TypeAdapter<Date>() {
                 reader.nextNull()
                 null
             }
+
             JsonToken.NUMBER -> {
                 val timestamp = reader.nextLong()
                 Date(timestamp)
             }
+
             JsonToken.STRING -> {
                 val str = reader.nextString()
                 str.toLongOrNull()?.let { Date(it) }
             }
+
             else -> {
                 reader.skipValue()
                 null
