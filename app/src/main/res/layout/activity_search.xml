@@ -44,7 +44,8 @@
            />
     </FrameLayout>
     <FrameLayout android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
         <androidx.recyclerview.widget.RecyclerView
             android:layout_margin="@dimen/search_margin_size"
             android:id="@+id/songItems"
@@ -52,6 +53,7 @@
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         <LinearLayout
+            android:layout_marginTop="100dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -62,33 +64,44 @@
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:srcCompat="@drawable/not_found"
                 />
-            <TextView android:id="@+id/placeholderTitle"
-                android:layout_width="300dp"
+            <TextView
+                android:layout_marginTop="@dimen/placeholder_margin_top_elements"
+                android:id="@+id/placeholderTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textAlignment="center"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+                style="@style/SearchErrorPlaceholder"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="@string/connect_problem_title"
                 />
-            <TextView android:id="@+id/placeholderMessage"
-                android:layout_width="300dp"
+            <TextView
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="@dimen/placeholder_margin_top_elements"
+                android:id="@+id/placeholderMessage"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textAlignment="center"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+                style="@style/SearchErrorPlaceholder"
                 android:visibility="gone"
+                tools:visibility="visible"
+                tools:text="@string/connect_problem_message"
                 />
             <Button android:id="@+id/refresh"
+                android:layout_marginTop="@dimen/placeholder_margin_top_elements"
+                style="@style/SearchErrorButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/refresh"
                 android:visibility="gone"
+                tools:visibility="visible"
                 />
 
         </LinearLayout>

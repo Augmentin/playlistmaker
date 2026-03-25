@@ -32,12 +32,13 @@ class ErrorInterceptor : Interceptor {
 
 object ItunesClient {
     private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.NONE
     }
 
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
+  //      .addInterceptor(ErrorInterceptor())
         .build()
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(NetworkConstants.ITUNES_BASE_URL)
