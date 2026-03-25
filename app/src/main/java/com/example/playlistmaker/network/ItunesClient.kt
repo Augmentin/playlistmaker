@@ -32,7 +32,7 @@ class ErrorInterceptor : Interceptor {
 
 object ItunesClient {
     private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.NONE
     }
 
 

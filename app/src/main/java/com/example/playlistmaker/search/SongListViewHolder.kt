@@ -24,7 +24,7 @@ class SongListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         tvArtistName.text = item.artistName?.trim() ?: "Undefined"
         tvTrackTime.text  = item.trackTimeDate?.let {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(it)
-        } ?: ""
+        } ?: "00:00"
 
         Glide.with(itemView).load(item.artworkUrl100)
             .placeholder(R.drawable.placeholder)

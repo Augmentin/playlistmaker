@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface ItunesApi {
 
 
-    @GET("/Augmentin/playlistmaker/refs/heads/dev/jsons/itunes_1.json")
+    @GET("/search?entity=song")
     fun search(@Query("term") text: String): Call<SearchResponse>
 
 }
