@@ -26,12 +26,11 @@
     },
     {
       "artistName":"test_artistName_4",
-      "trackTimeMillis":29322000,
       "artworkUrl100":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/cc/f0/df/ccf0dff7-a38f-caa0-79a3-05cb869b0380/09UMGIM08254.rgb.jpg/100x100bb.jpg"
     },
     {
       "artistName":"test_artistName_5",
-      "trackTimeMillis":29322000
+      "trackTimeMillis":null
     }
   ]
 }
