@@ -6,6 +6,6 @@ import java.util.Date
 data class TrackData(
     val trackName: String?,
     val artistName: String?,
-    @SerializedName("trackTimeMillis") val trackTimeDate: Date?,
+    val trackTimeMillis: Long?,
     val artworkUrl100: String?
 )

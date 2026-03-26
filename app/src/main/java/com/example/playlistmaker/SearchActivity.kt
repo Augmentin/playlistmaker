@@ -36,7 +36,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var adapter: SongListAdapter
-    private val trackList = ArrayList<TrackData>()
+    private val trackList = mutableListOf<TrackData>()
 
 
     private lateinit var placeholderImg: ImageView
@@ -76,6 +76,9 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(currentView.windowToken, 0)
             inputEditText.setText("")
             inputEditText.clearFocus()
+            inputEditText.setHint(R.string.search_hint)
+            trackList.clear()
+            adapter.notifyDataSetChanged()
         }
         refreshButton.setOnClickListener {
             hidePlaceholderFields()
@@ -121,10 +124,11 @@ class SearchActivity : AppCompatActivity() {
                 call: Call<SearchResponse?>?,
                 response: retrofit2.Response<SearchResponse?>?
             ) {
-                if (response?.code() == 200) {
-                    if (response.body()?.results?.isNotEmpty() == true) {
+                if (response?.isSuccessful == true) {
+                    val result: MutableList<TrackData> = response.body()?.results ?: mutableListOf()
+                    if (result.isNotEmpty()) {
                         trackList.clear()
-                        trackList.addAll(response.body()?.results!!)
+                        trackList.addAll(result)
                         adapter.notifyDataSetChanged()
                     } else {
                         showMessage(getString(R.string.not_found), "", R.drawable.not_found)
@@ -140,7 +144,11 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
-                showMessage(getString(R.string.error))
+                showMessage(
+                    getString(R.string.connect_problem_title),
+                    getString(R.string.connect_problem_message),
+                    R.drawable.connection_fail
+                )
                 refreshButton.visibility = View.VISIBLE
             }
         })
