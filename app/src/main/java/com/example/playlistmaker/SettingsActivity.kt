@@ -1,8 +1,6 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
@@ -10,6 +8,7 @@ import com.google.android.material.textview.MaterialTextView
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -24,7 +23,12 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val sharedPrefs = getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
+        themeSwitcher.isChecked = sharedPrefs.getBoolean(PLAYLISTMAKET_THEME_KEY, false)
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked  ->
+            (applicationContext as App).switchTheme(checked)
+        }
 
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
         back.setNavigationOnClickListener {

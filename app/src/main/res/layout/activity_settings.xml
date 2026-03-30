@@ -26,6 +26,7 @@
         android:layout_marginHorizontal="@dimen/main_margin_horizontal"
         android:checked="true"
         style="@style/SettingMenuItem"
+        android:id="@+id/themeSwitcher"
         />
 
     <com.google.android.material.textview.MaterialTextView
