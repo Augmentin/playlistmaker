@@ -1,0 +1,36 @@
+{
+  "resultCount": 4,
+  "results": [
+    {
+      "trackName":"Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название ",
+      "artistName": "test",
+      "trackTimeMillis":293000,
+      "artworkUrl100":""
+    },
+    {
+      "trackName":"test_trackName",
+      "artistName":"test_artistName",
+      "trackTimeMillis":9293000,
+      "artworkUrl100":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/cc/f0/df/ccf0dff7-a38f-caa0-79a3-05cb869b0380/09UMGIM08254.rgb.jpg/100x100bb.jpg"
+    },
+    {
+      "trackName":"test_trackName_2",
+      "artistName":"Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название Длинное название ",
+      "trackTimeMillis":312322000,
+      "artworkUrl100":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/cc/f0/df/ccf0dff7-a38f-caa0-79a3-05cb869b0380/09UMGIM08254.rgb.jpg/100x100bb.jpg"
+    },
+    {
+      "trackName":"test_trackName_3",
+      "trackTimeMillis":66322000,
+      "artworkUrl100":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/cc/f0/df/ccf0dff7-a38f-caa0-79a3-05cb869b0380/09UMGIM08254.rgb.jpg/100x100bb.jpg"
+    },
+    {
+      "artistName":"test_artistName_4",
+      "artworkUrl100":"https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/cc/f0/df/ccf0dff7-a38f-caa0-79a3-05cb869b0380/09UMGIM08254.rgb.jpg/100x100bb.jpg"
+    },
+    {
+      "artistName":"test_artistName_5",
+      "trackTimeMillis":null
+    }
+  ]
+}

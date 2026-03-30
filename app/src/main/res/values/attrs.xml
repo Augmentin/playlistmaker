@@ -9,4 +9,6 @@
     <attr name="search_icon" format="color"/>
     <attr name="search_list_track_name_color" format="color" />
     <attr name="search_list_artist_name_color" format="color" />
+    <attr name="black_white" format="color" />
+    <attr name="white_black" format="color" />
 </resources>
