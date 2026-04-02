@@ -8,6 +8,8 @@ import com.google.android.material.textview.MaterialTextView
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_PREFERENCE
+import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_THEME_KEY
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {

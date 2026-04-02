@@ -7,7 +7,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.network.itunes.TrackData
 
 
-class SongListAdapter(private val data: List<TrackData>) :
+class SongListAdapter(private val data: List<TrackData>,private val searchHistory: SearchHistory? = null) :
     RecyclerView.Adapter<SongListViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -23,9 +23,19 @@ class SongListAdapter(private val data: List<TrackData>) :
         position: Int
     ) {
         holder.bind(data[position])
+
+        if(searchHistory != null){
+            holder.itemView.setOnClickListener {
+                searchHistory.addToHistory(data[position])
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
+
+
+
 }
