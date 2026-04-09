@@ -22,4 +22,9 @@
     <string name="error" translatable="false">Что-то пошло не так</string>
     <string name="refresh" translatable="false">Обновить</string>
     <string name="historyRefresh" translatable="false">Очистить историю</string>
+    <string name="duration" translatable="false">Длительность</string>
+    <string name="album" translatable="false">Альбом</string>
+    <string name="year" translatable="false">Год</string>
+    <string name="genre" translatable="false">Жанр</string>
+    <string name="country" translatable="false">Страна</string>
 </resources>

@@ -17,10 +17,14 @@
     <dimen name="settings_text_size">16sp</dimen>
 
     <dimen name="search_hint_size">12sp</dimen>
+    <dimen name="playlist_title_size">22sp</dimen>
+    <dimen name="playlist_track_size">14sp</dimen>
     <dimen name="search_placeholder_size">20sp</dimen>
     <dimen name="search_refresh_text">14sp</dimen>
     <dimen name="search_margin_size">12dp</dimen>
     <dimen name="search_radius_image">2dp</dimen>
     <dimen name="search_refresh_radius">54dp</dimen>
     <dimen name="placeholder_margin_top_elements">16dp</dimen>
+
+    <dimen name="sp16">16sp</dimen>
 </resources>

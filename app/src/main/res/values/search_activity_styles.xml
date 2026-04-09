@@ -28,7 +28,18 @@
         <item name="android:textCursorDrawable">@drawable/cursor</item>
         <item name="android:paddingEnd">36dp</item>
     </style>
-
+    <style name="PlaylistText">
+        <item name="android:textColor">?attr/black_white</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/playlist_title_size</item>
+    </style>
+    <style name="PlaylistText.Size14">
+        <item name="android:textSize">@dimen/playlist_track_size</item>
+    </style>
+    <style name="PlaylistText.Size16">
+        <item name="android:textSize">@dimen/sp16</item>
+    </style>
     <style name="SearchErrorPlaceholder">
         <item name="android:textColor">?attr/black_white</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
