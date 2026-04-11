@@ -103,9 +103,43 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 />
-
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:id="@+id/searchHistoryGroup"
+            >
+            <TextView
+                android:id="@+id/searchHistoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                style="@style/SearchErrorPlaceholder"
+                android:text="@string/search_history_title"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_margin="@dimen/search_margin_size"
+                android:id="@+id/historySongItems"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            <Button android:id="@+id/historyRefresh"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                style="@style/SearchErrorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/historyRefresh"
+                tools:visibility="visible"
+                />
+        </LinearLayout>
     </FrameLayout>
 
 </LinearLayout>

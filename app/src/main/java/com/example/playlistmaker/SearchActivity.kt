@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +21,8 @@ import com.example.playlistmaker.network.ItunesClient
 import com.example.playlistmaker.search.SongListAdapter
 import com.example.playlistmaker.network.itunes.SearchResponse
 import com.example.playlistmaker.network.itunes.TrackData
+import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_PREFERENCE
+import com.example.playlistmaker.search.SearchHistory
 import com.example.playlistmaker.search.SongListViewHolder
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -38,13 +41,20 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapter: SongListAdapter
     private val trackList = mutableListOf<TrackData>()
 
+    private lateinit  var searchHistory: SearchHistory
 
     private lateinit var placeholderImg: ImageView
     private lateinit var placeholderTitle: TextView
     private lateinit var placeholderMessage: TextView
     private lateinit var refreshButton: Button
 
+    private lateinit var viewHistoryGroup: LinearLayout
+    private lateinit var historyRefresh: Button
+
+    private lateinit var historyAdapter: SongListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         val currentView = findViewById<View>(R.id.search_view);
@@ -53,20 +63,28 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        searchHistory =  SearchHistory(getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE))
+        viewHistoryGroup = findViewById(R.id.searchHistoryGroup)
         placeholderImg = findViewById(R.id.fail_img)
         placeholderTitle = findViewById(R.id.placeholderTitle)
         placeholderMessage = findViewById(R.id.placeholderMessage)
         refreshButton = findViewById(R.id.refresh)
-
-        adapter = SongListAdapter(trackList)
+        historyRefresh = findViewById(R.id.historyRefresh)
+        val historySongItems = findViewById<RecyclerView>(R.id.historySongItems)
+        adapter = SongListAdapter(trackList, searchHistory)
+        historyAdapter = SongListAdapter(searchHistory.historyArray)
         val songItems = findViewById<RecyclerView>(R.id.songItems)
-        songItems.adapter = adapter;
+        songItems.adapter = adapter
+        historySongItems.adapter = historyAdapter
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
         back.setNavigationOnClickListener {
             finish()
         }
-
+        historyRefresh.setOnClickListener {
+            searchHistory.clearHistory()
+            historyAdapter.notifyDataSetChanged()
+            viewHistoryGroup.visibility = View.GONE
+        }
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         val inputEditText = findViewById<EditText>(R.id.inputEditText)
         inputEditText.setText(current_search)
@@ -78,6 +96,7 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.clearFocus()
             inputEditText.setHint(R.string.search_hint)
             trackList.clear()
+            hidePlaceholderFields()
             adapter.notifyDataSetChanged()
         }
         refreshButton.setOnClickListener {
@@ -101,10 +120,22 @@ class SearchActivity : AppCompatActivity() {
                 current_search = STRING_DEF
             }
             clearButton.isVisible = !s.isNullOrEmpty()
+            hidePlaceholderFields()
+            viewHistoryGroup.visibility = if (inputEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+
         }
 
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (searchHistory.historyArray.size > 0 && hasFocus && inputEditText.text.isEmpty()) {
+                viewHistoryGroup.visibility = View.VISIBLE
+            } else {
+                viewHistoryGroup.visibility = View.GONE
+            }
+            historyAdapter.notifyDataSetChanged()
+        }
 
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -155,10 +186,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hidePlaceholderFields() {
-        placeholderTitle.visibility = View.GONE
-        placeholderMessage.visibility = View.GONE
-        placeholderImg.visibility = View.GONE
-        refreshButton.visibility = View.GONE
+        if(placeholderTitle.visibility === View.VISIBLE){
+            placeholderTitle.visibility = View.GONE
+            placeholderMessage.visibility = View.GONE
+            placeholderImg.visibility = View.GONE
+            refreshButton.visibility = View.GONE
+        }
     }
 
     private fun showMessage(
