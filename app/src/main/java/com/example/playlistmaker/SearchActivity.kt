@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -23,8 +24,8 @@ import com.example.playlistmaker.network.itunes.SearchResponse
 import com.example.playlistmaker.network.itunes.TrackData
 import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_PREFERENCE
 import com.example.playlistmaker.search.SearchHistory
-import com.example.playlistmaker.search.SongListViewHolder
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -71,8 +72,19 @@ class SearchActivity : AppCompatActivity() {
         refreshButton = findViewById(R.id.refresh)
         historyRefresh = findViewById(R.id.historyRefresh)
         val historySongItems = findViewById<RecyclerView>(R.id.historySongItems)
-        adapter = SongListAdapter(trackList, searchHistory)
-        historyAdapter = SongListAdapter(searchHistory.historyArray)
+        adapter = SongListAdapter(trackList, {
+            track ->
+            searchHistory.addToHistory(track)
+            val displayIntent = Intent(this, PlaylistActivity::class.java)
+            displayIntent.putExtra("TRACK", Gson().toJson(track))
+            startActivity(displayIntent)
+        })
+        historyAdapter = SongListAdapter(searchHistory.historyArray, {
+            track ->
+            val displayIntent = Intent(this, PlaylistActivity::class.java)
+            displayIntent.putExtra("TRACK", Gson().toJson(track))
+            startActivity(displayIntent)
+        })
         val songItems = findViewById<RecyclerView>(R.id.songItems)
         songItems.adapter = adapter
         historySongItems.adapter = historyAdapter

@@ -11,4 +11,5 @@
     <attr name="search_list_artist_name_color" format="color" />
     <attr name="black_white" format="color" />
     <attr name="white_black" format="color" />
+    <attr name="grey2_gray4" format="color"/>
 </resources>

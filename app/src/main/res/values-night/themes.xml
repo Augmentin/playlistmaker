@@ -24,5 +24,6 @@
         <item name="search_list_artist_name_color">@color/white</item>
         <item name="black_white">@color/white</item>
         <item name="white_black">@color/black_2</item>
+        <item name="grey2_gray4">@color/white</item>
     </style>
 </resources>

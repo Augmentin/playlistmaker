@@ -74,8 +74,8 @@
             android:id="@+id/addButton"
             android:layout_width="51dp"
             android:layout_height="51dp"
-            android:src="@drawable/plus"
-            android:background="@drawable/round_button_add"
+            android:src="@drawable/add_button1"
+            android:background="@null"
 
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             app:layout_constraintEnd_toStartOf="@id/playButton"
@@ -112,7 +112,7 @@
             android:textAlignment="center"
             style="@style/PlaylistText.Size16"
             app:layout_constraintTop_toBottomOf="@id/playButton"
-            tools:text="0:30"
+            android:text="@string/_00_00"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             />
@@ -120,9 +120,8 @@
             android:id="@+id/duration"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-
-            style="@style/PlaylistText.Size16"
+            android:layout_marginTop="20dp"
+            style="@style/PlaylistText.Size12.Padding.ColorGrey"
             app:layout_constraintTop_toBottomOf="@id/trackTime"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             android:text="@string/duration"
@@ -132,8 +131,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-
-            style="@style/PlaylistText.Size16"
+            style="@style/PlaylistText.Size12.Padding"
             app:layout_constraintTop_toBottomOf="@id/trackTime"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             tools:text="5:35"
@@ -143,9 +141,9 @@
             android:id="@+id/album"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
 
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding.ColorGrey"
             app:layout_constraintTop_toBottomOf="@id/duration"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             android:text="@string/album"
@@ -154,8 +152,8 @@
             android:id="@+id/albumValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding"
             app:layout_constraintTop_toBottomOf="@id/duration"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             tools:text="Yesterday (Remastered 2009)"
@@ -166,9 +164,9 @@
             android:id="@+id/year"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
 
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding.ColorGrey"
             app:layout_constraintTop_toBottomOf="@id/album"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             android:text="@string/year"
@@ -177,8 +175,8 @@
             android:id="@+id/yearValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding"
             app:layout_constraintTop_toBottomOf="@id/album"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             android:layout_alignBaseline="@id/year"
@@ -188,9 +186,9 @@
             android:id="@+id/genre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
 
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding.ColorGrey"
             app:layout_constraintTop_toBottomOf="@id/year"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             android:text="@string/genre"
@@ -199,8 +197,8 @@
             android:id="@+id/genreValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding"
             app:layout_constraintTop_toBottomOf="@id/year"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
             android:layout_alignBaseline="@id/genre"
@@ -211,9 +209,9 @@
             android:id="@+id/country"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
 
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding.ColorGrey"
             app:layout_constraintTop_toBottomOf="@id/genre"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
             android:text="@string/country"
@@ -222,11 +220,11 @@
             android:id="@+id/countryValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            style="@style/PlaylistText.Size16"
+
+            style="@style/PlaylistText.Size12.Padding"
             app:layout_constraintTop_toBottomOf="@id/genre"
             app:layout_constraintEnd_toStartOf="@id/right_guideline"
-            android:layout_alignBaseline="@id/genre"
+            android:layout_alignBaseline="@id/country"
             tools:text="Великобритания"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

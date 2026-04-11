@@ -34,6 +34,18 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:textSize">@dimen/playlist_title_size</item>
     </style>
+    <style name="PlaylistText.Size12">
+        <item name="android:textSize">@dimen/sp12</item>
+    </style>
+    <style name="PlaylistText.Size12.Padding">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+    <style name="PlaylistText.Size12.Padding.ColorGrey">
+        <item name="android:textColor">@color/gray3</item>
+        <item name="android:textSize">@dimen/sp12</item>
+    </style>
+
     <style name="PlaylistText.Size14">
         <item name="android:textSize">@dimen/playlist_track_size</item>
     </style>

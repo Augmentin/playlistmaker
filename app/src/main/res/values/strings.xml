@@ -27,4 +27,5 @@
     <string name="year" translatable="false">Год</string>
     <string name="genre" translatable="false">Жанр</string>
     <string name="country" translatable="false">Страна</string>
+    <string name="_00_00">00:00</string>
 </resources>
