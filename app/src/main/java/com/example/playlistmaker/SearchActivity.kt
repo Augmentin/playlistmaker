@@ -95,7 +95,7 @@ class SearchActivity : AppCompatActivity() {
         historyRefresh.setOnClickListener {
             searchHistory.clearHistory()
             historyAdapter.notifyDataSetChanged()
-            viewHistoryGroup.visibility = View.GONE
+            viewHistoryGroup.isVisible = false
         }
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         val inputEditText = findViewById<EditText>(R.id.inputEditText)
@@ -133,16 +133,12 @@ class SearchActivity : AppCompatActivity() {
             }
             clearButton.isVisible = !s.isNullOrEmpty()
             hidePlaceholderFields()
-            viewHistoryGroup.visibility = if (inputEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+            viewHistoryGroup.isVisible = inputEditText.hasFocus() && s?.isEmpty() == true
 
         }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (searchHistory.historyArray.size > 0 && hasFocus && inputEditText.text.isEmpty()) {
-                viewHistoryGroup.visibility = View.VISIBLE
-            } else {
-                viewHistoryGroup.visibility = View.GONE
-            }
+            viewHistoryGroup.isVisible = searchHistory.historyArray.size > 0 && hasFocus && inputEditText.text.isEmpty()
             historyAdapter.notifyDataSetChanged()
         }
 
@@ -182,7 +178,7 @@ class SearchActivity : AppCompatActivity() {
                         getString(R.string.connect_problem_message),
                         R.drawable.connection_fail
                     )
-                    refreshButton.visibility = View.VISIBLE
+                    refreshButton.isVisible = true
                 }
             }
 
@@ -192,7 +188,7 @@ class SearchActivity : AppCompatActivity() {
                     getString(R.string.connect_problem_message),
                     R.drawable.connection_fail
                 )
-                refreshButton.visibility = View.VISIBLE
+                refreshButton.isVisible = true
             }
         })
     }

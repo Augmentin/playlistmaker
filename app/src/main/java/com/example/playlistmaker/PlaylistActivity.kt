@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.network.itunes.TrackData
@@ -56,17 +57,17 @@ class PlaylistActivity  : AppCompatActivity() {
         val albumValue = findViewById<TextView>(R.id.albumValue)
 
         if(track.collectionName.isNullOrEmpty()){
-            albumValue.visibility =  View.GONE
+            albumValue.isVisible =  false
             val album = findViewById<TextView>(R.id.album)
-            album.visibility =  View.GONE
+            album.isVisible =  false
         }else{
             albumValue.text = track.collectionName
         }
         val yearValue = findViewById<TextView>(R.id.yearValue)
         if(track.releaseDate.isNullOrEmpty()){
-            yearValue.visibility = View.GONE
+            yearValue.isVisible = false
             val year = findViewById<TextView>(R.id.year)
-            year.visibility = View.GONE
+            year.isVisible = false
         }else{
             yearValue.text =  track.releaseDate.let {
                 val date = inputFormat.parse(it)
