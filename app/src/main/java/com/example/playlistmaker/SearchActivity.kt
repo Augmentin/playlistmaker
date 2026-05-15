@@ -4,6 +4,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -11,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -37,23 +40,50 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         const val SEARCH_STRING = "SEARCH_STRING"
         const val STRING_DEF = ""
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private lateinit var adapter: SongListAdapter
     private val trackList = mutableListOf<TrackData>()
 
-    private lateinit  var searchHistory: SearchHistory
+    private lateinit var searchHistory: SearchHistory
 
     private lateinit var placeholderImg: ImageView
     private lateinit var placeholderTitle: TextView
     private lateinit var placeholderMessage: TextView
     private lateinit var refreshButton: Button
+    private lateinit var progressBar: ProgressBar
 
+    private val searchRunnable = Runnable { searchTrack() }
     private lateinit var viewHistoryGroup: LinearLayout
     private lateinit var historyRefresh: Button
 
+    private lateinit var inputEditText: EditText
     private lateinit var historyAdapter: SongListAdapter
 
+    private lateinit var historySongItems: RecyclerView
+    private lateinit var songItems: RecyclerView
+    private var isClickAllowed = true
+
+
+    private val handler = Handler(Looper.getMainLooper())
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true },
+                CLICK_DEBOUNCE_DELAY
+            )
+        }
+        return current
+    }
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable,
+            SEARCH_DEBOUNCE_DELAY
+        )
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -64,28 +94,31 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        searchHistory =  SearchHistory(getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE))
+        searchHistory = SearchHistory(getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE))
         viewHistoryGroup = findViewById(R.id.searchHistoryGroup)
         placeholderImg = findViewById(R.id.fail_img)
         placeholderTitle = findViewById(R.id.placeholderTitle)
         placeholderMessage = findViewById(R.id.placeholderMessage)
         refreshButton = findViewById(R.id.refresh)
         historyRefresh = findViewById(R.id.historyRefresh)
-        val historySongItems = findViewById<RecyclerView>(R.id.historySongItems)
-        adapter = SongListAdapter(trackList, {
-            track ->
-            searchHistory.addToHistory(track)
-            val displayIntent = Intent(this, PlaylistActivity::class.java)
-            displayIntent.putExtra("TRACK", Gson().toJson(track))
-            startActivity(displayIntent)
+        progressBar = findViewById(R.id.progressBar)
+        historySongItems = findViewById(R.id.historySongItems)
+        adapter = SongListAdapter(trackList, { track ->
+            if(clickDebounce()){
+                searchHistory.addToHistory(track)
+                val displayIntent = Intent(this, PlaylistActivity::class.java)
+                displayIntent.putExtra("TRACK", Gson().toJson(track))
+                startActivity(displayIntent)
+            }
         })
-        historyAdapter = SongListAdapter(searchHistory.historyArray, {
-            track ->
-            val displayIntent = Intent(this, PlaylistActivity::class.java)
-            displayIntent.putExtra("TRACK", Gson().toJson(track))
-            startActivity(displayIntent)
+        historyAdapter = SongListAdapter(searchHistory.historyArray, { track ->
+            if(clickDebounce()){
+                val displayIntent = Intent(this, PlaylistActivity::class.java)
+                displayIntent.putExtra("TRACK", Gson().toJson(track))
+                startActivity(displayIntent)
+            }
         })
-        val songItems = findViewById<RecyclerView>(R.id.songItems)
+        songItems = findViewById<RecyclerView>(R.id.songItems)
         songItems.adapter = adapter
         historySongItems.adapter = historyAdapter
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
@@ -98,8 +131,9 @@ class SearchActivity : AppCompatActivity() {
             viewHistoryGroup.isVisible = false
         }
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
-        val inputEditText = findViewById<EditText>(R.id.inputEditText)
+        inputEditText = findViewById<EditText>(R.id.inputEditText)
         inputEditText.setText(current_search)
+
         clearButton.setOnClickListener {
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -112,13 +146,11 @@ class SearchActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
         refreshButton.setOnClickListener {
-            hidePlaceholderFields()
             searchTrack()
         }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                hidePlaceholderFields()
                 searchTrack()
             }
             false
@@ -134,11 +166,20 @@ class SearchActivity : AppCompatActivity() {
             clearButton.isVisible = !s.isNullOrEmpty()
             hidePlaceholderFields()
             viewHistoryGroup.isVisible = inputEditText.hasFocus() && s?.isEmpty() == true
+            if(s?.isEmpty() == true){
+               // songItems.isVisible = false
+                handler.removeCallbacks(searchRunnable)
+                trackList.clear()
+                adapter.notifyDataSetChanged()
+            }
+
+            searchDebounce()
 
         }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            viewHistoryGroup.isVisible = searchHistory.historyArray.size > 0 && hasFocus && inputEditText.text.isEmpty()
+            viewHistoryGroup.isVisible =
+                searchHistory.historyArray.size > 0 && hasFocus && inputEditText.text.isEmpty()
             historyAdapter.notifyDataSetChanged()
         }
 
@@ -158,21 +199,46 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun searchTrack() {
-        ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse> {
-            override fun onResponse(
-                call: Call<SearchResponse?>?,
-                response: retrofit2.Response<SearchResponse?>?
-            ) {
-                if (response?.isSuccessful == true) {
-                    val result: MutableList<TrackData> = response.body()?.results ?: mutableListOf()
-                    if (result.isNotEmpty()) {
-                        trackList.clear()
-                        trackList.addAll(result)
-                        adapter.notifyDataSetChanged()
+        if (!inputEditText.text.isNullOrEmpty()) {
+            hidePlaceholderFields()
+            viewHistoryGroup.isVisible = false
+            progressBar.isVisible = true
+            songItems.isVisible = false
+            val text = inputEditText.text;
+            ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse> {
+                override fun onResponse(
+                    call: Call<SearchResponse?>?,
+                    response: retrofit2.Response<SearchResponse?>?
+                ) {
+                    if (response?.isSuccessful == true) {
+                        if(text.equals(inputEditText.text)){
+                            progressBar.isVisible = false
+                            songItems.isVisible = true
+                            val result: MutableList<TrackData> =
+                                response.body()?.results ?: mutableListOf()
+                            if (result.isNotEmpty()) {
+                                trackList.clear()
+                                trackList.addAll(result)
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                showMessage(getString(R.string.not_found), "", R.drawable.not_found)
+                            }
+                        }
+
                     } else {
-                        showMessage(getString(R.string.not_found), "", R.drawable.not_found)
+                        progressBar.isVisible = false
+                        showMessage(
+                            getString(R.string.connect_problem_title),
+                            getString(R.string.connect_problem_message),
+                            R.drawable.connection_fail
+                        )
+                        refreshButton.isVisible = true
                     }
-                } else {
+                }
+
+                override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
+                    progressBar.isVisible = false
+                    songItems.isVisible = true
                     showMessage(
                         getString(R.string.connect_problem_title),
                         getString(R.string.connect_problem_message),
@@ -180,21 +246,13 @@ class SearchActivity : AppCompatActivity() {
                     )
                     refreshButton.isVisible = true
                 }
-            }
+            })
+        }
 
-            override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
-                showMessage(
-                    getString(R.string.connect_problem_title),
-                    getString(R.string.connect_problem_message),
-                    R.drawable.connection_fail
-                )
-                refreshButton.isVisible = true
-            }
-        })
     }
 
     private fun hidePlaceholderFields() {
-        if(placeholderTitle.visibility === View.VISIBLE){
+        if (placeholderTitle.visibility === View.VISIBLE) {
             placeholderTitle.visibility = View.GONE
             placeholderMessage.visibility = View.GONE
             placeholderImg.visibility = View.GONE

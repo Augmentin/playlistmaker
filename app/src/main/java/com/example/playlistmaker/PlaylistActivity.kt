@@ -1,9 +1,12 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -15,16 +18,30 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.network.itunes.TrackData
+import com.example.playlistmaker.player.AudioPlayer
+import com.example.playlistmaker.player.MediaPlayerImpl
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlaylistActivity  : AppCompatActivity() {
+    companion object {
+        private const val TIME_PING_DELAY = 300L
+    }
+
+    private lateinit var playButton: ImageButton
+
+    private val player: AudioPlayer = MediaPlayerImpl()
+    private val handler = Handler(Looper.getMainLooper())
+    private val playTimeRunnable = Runnable { playTime() }
+    private lateinit var trackTime : TextView
+    private lateinit var durationValue:TextView
 
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault())
 
+    val format =  SimpleDateFormat("mm:ss", Locale.getDefault())
     private val yearFormat by lazy { SimpleDateFormat("yyyy", Locale.getDefault()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +54,8 @@ class PlaylistActivity  : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        playButton = findViewById(R.id.playButton)
+        trackTime = findViewById(R.id.trackTime)
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
         back.setNavigationOnClickListener {
             finish()
@@ -50,7 +69,7 @@ class PlaylistActivity  : AppCompatActivity() {
         trackTitle.text = track.trackName?.trim() ?: "Undefined"
         trackArtist.text = track.artistName?.trim() ?: "Undefined"
 
-        val durationValue = findViewById<TextView>(R.id.durationValue)
+        durationValue = findViewById(R.id.durationValue)
         durationValue.text = track.trackTimeMillis?.let {
             dateFormat.format(it)
         } ?: "00:00"
@@ -80,6 +99,32 @@ class PlaylistActivity  : AppCompatActivity() {
         countryValue.text = track.country
         val image = findViewById<ImageView>(R.id.image)
 
+        if(track?.previewUrl.isNullOrBlank()){
+            playButton.isEnabled = false
+        }else{
+            player.prepare(
+                url = track.previewUrl,
+                onPrepared ={
+                    playButton.isEnabled = true
+                    playButton.setImageResource(R.drawable.play_button)
+                },
+                onCompletion = {
+                    handler.removeCallbacks(playTimeRunnable)
+                    playButton.setImageResource(R.drawable.play_button)
+                    trackTime.text = "00:00"
+                })
+        }
+
+        playButton.setOnClickListener {
+           player.playbackControl(
+               onPaused = {
+                   pausedPlayer()
+               },
+               onStart = {
+                   startedPlayer()
+               }
+           )
+        }
         Glide.with(this).load(track?.getCoverArtwork())
             .placeholder(R.drawable.placeholder)
             .fitCenter()
@@ -93,4 +138,34 @@ class PlaylistActivity  : AppCompatActivity() {
             finish()
         }
     }
+
+    private fun playTime(){
+       Log.i("mediapleer",  format.format(player.getCurrentPosition()))
+       trackTime.text = format.format(player.getCurrentPosition())
+       handler.postDelayed(playTimeRunnable, TIME_PING_DELAY)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        player.pause()
+        pausedPlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(playTimeRunnable)
+        player.release()
+    }
+
+
+    private fun startedPlayer() {
+        playButton.setImageResource(R.drawable.pause)
+        playTime()
+    }
+
+    private fun pausedPlayer() {
+        handler.removeCallbacks(playTimeRunnable)
+        playButton.setImageResource(R.drawable.play_button)
+    }
+
 }
