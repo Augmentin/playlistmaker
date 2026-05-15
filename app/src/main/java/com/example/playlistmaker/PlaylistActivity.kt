@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-import android.media.MediaPlayer
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,6 +18,8 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.network.itunes.TrackData
+import com.example.playlistmaker.player.AudioPlayer
+import com.example.playlistmaker.player.MediaPlayerImpl
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
@@ -25,21 +27,17 @@ import java.util.Locale
 
 class PlaylistActivity  : AppCompatActivity() {
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val TIME_PING_DELAY = 300L
     }
 
     private lateinit var playButton: ImageButton
 
-    private var mediaPlayer = MediaPlayer()
+    private val player: AudioPlayer = MediaPlayerImpl()
     private val handler = Handler(Looper.getMainLooper())
     private val playTimeRunnable = Runnable { playTime() }
     private lateinit var trackTime : TextView
     private lateinit var durationValue:TextView
-    private var playerState = STATE_DEFAULT
+
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault())
 
@@ -100,10 +98,32 @@ class PlaylistActivity  : AppCompatActivity() {
         val countryValue = findViewById<TextView>(R.id.countryValue)
         countryValue.text = track.country
         val image = findViewById<ImageView>(R.id.image)
-        preparePlayer(track?.previewUrl )
+
+        if(track?.previewUrl.isNullOrBlank()){
+            playButton.isEnabled = false
+        }else{
+            player.prepare(
+                url = track.previewUrl,
+                onPrepared ={
+                    playButton.isEnabled = true
+                    playButton.setImageResource(R.drawable.play_button)
+                },
+                onCompletion = {
+                    handler.removeCallbacks(playTimeRunnable)
+                    playButton.setImageResource(R.drawable.play_button)
+                    trackTime.text = "00:00"
+                })
+        }
 
         playButton.setOnClickListener {
-            playbackControl()
+           player.playbackControl(
+               onPaused = {
+                   pausedPlayer()
+               },
+               onStart = {
+                   startedPlayer()
+               }
+           )
         }
         Glide.with(this).load(track?.getCoverArtwork())
             .placeholder(R.drawable.placeholder)
@@ -120,67 +140,32 @@ class PlaylistActivity  : AppCompatActivity() {
     }
 
     private fun playTime(){
-       Log.i("mediapleer",  format.format(mediaPlayer.currentPosition))
-       trackTime.text = format.format(mediaPlayer.currentPosition)
+       Log.i("mediapleer",  format.format(player.getCurrentPosition()))
+       trackTime.text = format.format(player.getCurrentPosition())
        handler.postDelayed(playTimeRunnable, TIME_PING_DELAY)
-    }
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        player.pause()
+        pausedPlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(playTimeRunnable)
-        mediaPlayer.release()
+        player.release()
     }
 
 
-    private fun preparePlayer(url: String?) {
-        if(url.isNullOrEmpty()){
-            playButton.isEnabled = false
-        }else{
-            playButton.isEnabled = true
-            mediaPlayer.setDataSource(url)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
-                playButton.isEnabled = true
-                playButton.setImageResource(R.drawable.play_button)
-                playerState =  STATE_PREPARED
-            }
-            mediaPlayer.setOnCompletionListener {
-                handler.removeCallbacks(playTimeRunnable)
-                playButton.setImageResource(R.drawable.play_button)
-                playerState = STATE_PREPARED
-                trackTime.text = "00:00"
-            }
-        }
-
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
+    private fun startedPlayer() {
         playButton.setImageResource(R.drawable.pause)
-        playerState =STATE_PLAYING
         playTime()
     }
 
-    private fun pausePlayer() {
+    private fun pausedPlayer() {
         handler.removeCallbacks(playTimeRunnable)
-        mediaPlayer.pause()
         playButton.setImageResource(R.drawable.play_button)
-        playerState = STATE_PAUSED
     }
 
 }

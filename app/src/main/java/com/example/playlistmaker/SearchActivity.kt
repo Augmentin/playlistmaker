@@ -62,6 +62,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var inputEditText: EditText
     private lateinit var historyAdapter: SongListAdapter
 
+    private lateinit var historySongItems: RecyclerView
+    private lateinit var songItems: RecyclerView
     private var isClickAllowed = true
 
 
@@ -100,7 +102,7 @@ class SearchActivity : AppCompatActivity() {
         refreshButton = findViewById(R.id.refresh)
         historyRefresh = findViewById(R.id.historyRefresh)
         progressBar = findViewById(R.id.progressBar)
-        val historySongItems = findViewById<RecyclerView>(R.id.historySongItems)
+        historySongItems = findViewById(R.id.historySongItems)
         adapter = SongListAdapter(trackList, { track ->
             if(clickDebounce()){
                 searchHistory.addToHistory(track)
@@ -116,7 +118,7 @@ class SearchActivity : AppCompatActivity() {
                 startActivity(displayIntent)
             }
         })
-        val songItems = findViewById<RecyclerView>(R.id.songItems)
+        songItems = findViewById<RecyclerView>(R.id.songItems)
         songItems.adapter = adapter
         historySongItems.adapter = historyAdapter
         val back = findViewById<MaterialToolbar>(R.id.back_toolbar)
@@ -164,6 +166,13 @@ class SearchActivity : AppCompatActivity() {
             clearButton.isVisible = !s.isNullOrEmpty()
             hidePlaceholderFields()
             viewHistoryGroup.isVisible = inputEditText.hasFocus() && s?.isEmpty() == true
+            if(s?.isEmpty() == true){
+               // songItems.isVisible = false
+                handler.removeCallbacks(searchRunnable)
+                trackList.clear()
+                adapter.notifyDataSetChanged()
+            }
+
             searchDebounce()
 
         }
@@ -194,23 +203,30 @@ class SearchActivity : AppCompatActivity() {
             hidePlaceholderFields()
             viewHistoryGroup.isVisible = false
             progressBar.isVisible = true
+            songItems.isVisible = false
+            val text = inputEditText.text;
             ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse> {
                 override fun onResponse(
                     call: Call<SearchResponse?>?,
                     response: retrofit2.Response<SearchResponse?>?
                 ) {
-                    progressBar.isVisible = false
                     if (response?.isSuccessful == true) {
-                        val result: MutableList<TrackData> =
-                            response.body()?.results ?: mutableListOf()
-                        if (result.isNotEmpty()) {
-                            trackList.clear()
-                            trackList.addAll(result)
-                            adapter.notifyDataSetChanged()
-                        } else {
-                            showMessage(getString(R.string.not_found), "", R.drawable.not_found)
+                        if(text.equals(inputEditText.text)){
+                            progressBar.isVisible = false
+                            songItems.isVisible = true
+                            val result: MutableList<TrackData> =
+                                response.body()?.results ?: mutableListOf()
+                            if (result.isNotEmpty()) {
+                                trackList.clear()
+                                trackList.addAll(result)
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                showMessage(getString(R.string.not_found), "", R.drawable.not_found)
+                            }
                         }
+
                     } else {
+                        progressBar.isVisible = false
                         showMessage(
                             getString(R.string.connect_problem_title),
                             getString(R.string.connect_problem_message),
@@ -222,6 +238,7 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
                     progressBar.isVisible = false
+                    songItems.isVisible = true
                     showMessage(
                         getString(R.string.connect_problem_title),
                         getString(R.string.connect_problem_message),
