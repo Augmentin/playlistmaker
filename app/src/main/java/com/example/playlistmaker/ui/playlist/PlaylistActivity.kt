@@ -1,5 +1,4 @@
-package com.example.playlistmaker
-
+package com.example.playlistmaker.ui.playlist
 
 import android.os.Bundle
 import android.os.Handler
@@ -17,9 +16,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.network.itunes.TrackData
-import com.example.playlistmaker.player.AudioPlayer
-import com.example.playlistmaker.player.MediaPlayerImpl
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.presentation.player.AudioPlayer
+import com.example.playlistmaker.presentation.player.MediaPlayerImpl
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
@@ -36,12 +36,12 @@ class PlaylistActivity  : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val playTimeRunnable = Runnable { playTime() }
     private lateinit var trackTime : TextView
-    private lateinit var durationValue:TextView
+    private lateinit var durationValue: TextView
 
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault())
 
-    val format =  SimpleDateFormat("mm:ss", Locale.getDefault())
+    val format = SimpleDateFormat("mm:ss", Locale.getDefault())
     private val yearFormat by lazy { SimpleDateFormat("yyyy", Locale.getDefault()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

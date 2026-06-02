@@ -1,9 +1,6 @@
-package com.example.playlistmaker.network.itunes
+package com.example.playlistmaker.data.dto
 
-import com.google.gson.annotations.SerializedName
-import java.util.Date
-
-data class TrackData(
+data class TrackDataTdo(
     val trackId: String,
     val trackName: String?,
     val artistName: String?,
@@ -14,7 +11,5 @@ data class TrackData(
     val primaryGenreName: String?,
     val country: String?,
     val previewUrl: String?
-){
-    fun getCoverArtwork() = artworkUrl100?.replaceAfterLast('/',"512x512bb.jpg")
-
+) {
 }

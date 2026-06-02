@@ -1,7 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
-
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -21,16 +19,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.network.ItunesClient
-import com.example.playlistmaker.search.SongListAdapter
-import com.example.playlistmaker.network.itunes.SearchResponse
-import com.example.playlistmaker.network.itunes.TrackData
-import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_PREFERENCE
-import com.example.playlistmaker.search.SearchHistory
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+
+import com.example.playlistmaker.domain.models.TrackData
+import com.example.playlistmaker.preferences.PreferencesConstants
+import com.example.playlistmaker.ui.playlist.PlaylistActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
 
 
 class SearchActivity : AppCompatActivity() {
@@ -94,7 +90,12 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        searchHistory = SearchHistory(getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE))
+        searchHistory = SearchHistory(
+            getSharedPreferences(
+                PreferencesConstants.PLAYLISTMAKET_PREFERENCE,
+                MODE_PRIVATE
+            )
+        )
         viewHistoryGroup = findViewById(R.id.searchHistoryGroup)
         placeholderImg = findViewById(R.id.fail_img)
         placeholderTitle = findViewById(R.id.placeholderTitle)
@@ -104,7 +105,7 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         historySongItems = findViewById(R.id.historySongItems)
         adapter = SongListAdapter(trackList, { track ->
-            if(clickDebounce()){
+            if (clickDebounce()) {
                 searchHistory.addToHistory(track)
                 val displayIntent = Intent(this, PlaylistActivity::class.java)
                 displayIntent.putExtra("TRACK", Gson().toJson(track))
@@ -112,7 +113,7 @@ class SearchActivity : AppCompatActivity() {
             }
         })
         historyAdapter = SongListAdapter(searchHistory.historyArray, { track ->
-            if(clickDebounce()){
+            if (clickDebounce()) {
                 val displayIntent = Intent(this, PlaylistActivity::class.java)
                 displayIntent.putExtra("TRACK", Gson().toJson(track))
                 startActivity(displayIntent)
@@ -136,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(currentView.windowToken, 0)
             inputEditText.setText("")
             inputEditText.clearFocus()
@@ -205,48 +206,42 @@ class SearchActivity : AppCompatActivity() {
             progressBar.isVisible = true
             songItems.isVisible = false
             val text = inputEditText.text;
-            ItunesClient.api.search(current_search).enqueue(object : Callback<SearchResponse> {
-                override fun onResponse(
-                    call: Call<SearchResponse?>?,
-                    response: retrofit2.Response<SearchResponse?>?
-                ) {
-                    if (response?.isSuccessful == true) {
-                        if(text.equals(inputEditText.text)){
-                            progressBar.isVisible = false
-                            songItems.isVisible = true
-                            val result: MutableList<TrackData> =
-                                response.body()?.results ?: mutableListOf()
-                            if (result.isNotEmpty()) {
-                                trackList.clear()
-                                trackList.addAll(result)
-                                adapter.notifyDataSetChanged()
-                            } else {
-                                showMessage(getString(R.string.not_found), "", R.drawable.not_found)
-                            }
-                        }
-
-                    } else {
+            Creator.provideTracksInteractor().searchTracks(current_search,
+                onSuccess = { tracks ->
+                    if(text.equals(inputEditText.text)){
                         progressBar.isVisible = false
-                        showMessage(
-                            getString(R.string.connect_problem_title),
-                            getString(R.string.connect_problem_message),
-                            R.drawable.connection_fail
-                        )
-                        refreshButton.isVisible = true
-                    }
-                }
+                        songItems.isVisible = true
+                        if (tracks.isNotEmpty()) {
+                            trackList.clear()
+                            trackList.addAll(tracks)
+                            adapter.notifyDataSetChanged()
+                        }else{
+                            showMessage(getString(R.string.not_found), "", R.drawable.not_found)
 
-                override fun onFailure(call: Call<SearchResponse?>?, t: Throwable?) {
-                    progressBar.isVisible = false
-                    songItems.isVisible = true
-                    showMessage(
-                        getString(R.string.connect_problem_title),
-                        getString(R.string.connect_problem_message),
-                        R.drawable.connection_fail
-                    )
-                    refreshButton.isVisible = true
+                        }
+                    }
+                },
+                onFailure = { error ->
+                   if(error.message.equals("Fail to loading data")){
+                       progressBar.isVisible = false
+                       showMessage(
+                           getString(R.string.connect_problem_title),
+                           getString(R.string.connect_problem_message),
+                           R.drawable.connection_fail
+                       )
+                       refreshButton.isVisible = true
+                   }else{
+                       progressBar.isVisible = false
+                       songItems.isVisible = true
+                       showMessage(
+                           getString(R.string.connect_problem_title),
+                           getString(R.string.connect_problem_message),
+                           R.drawable.connection_fail
+                       )
+                       refreshButton.isVisible = true
+                   }
                 }
-            })
+                )
         }
 
     }

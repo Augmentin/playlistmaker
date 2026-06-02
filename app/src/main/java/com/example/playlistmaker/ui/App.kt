@@ -1,26 +1,24 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_PREFERENCE
-import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_THEME_KEY
-
+import com.example.playlistmaker.preferences.PreferencesConstants
 
 class App : Application() {
     var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
-        val sharedPrefs = getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
-        darkTheme = sharedPrefs.getBoolean(PLAYLISTMAKET_THEME_KEY, false)
+        val sharedPrefs = getSharedPreferences(PreferencesConstants.PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
+        darkTheme = sharedPrefs.getBoolean(PreferencesConstants.PLAYLISTMAKET_THEME_KEY, false)
         switchTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         if(darkTheme != darkThemeEnabled){
-            val sharedPrefs = getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
+            val sharedPrefs = getSharedPreferences(PreferencesConstants.PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
             sharedPrefs.edit()
-                .putBoolean(PLAYLISTMAKET_THEME_KEY, darkThemeEnabled)
+                .putBoolean(PreferencesConstants.PLAYLISTMAKET_THEME_KEY, darkThemeEnabled)
                 .apply()
             darkTheme = darkThemeEnabled;
         }

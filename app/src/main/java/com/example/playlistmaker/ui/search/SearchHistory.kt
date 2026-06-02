@@ -1,7 +1,7 @@
-package com.example.playlistmaker.search
+package com.example.playlistmaker.ui.search
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.network.itunes.TrackData
+import com.example.playlistmaker.domain.models.TrackData
 import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_TRACK_HISTORY_KEY
 import com.google.gson.Gson
 import androidx.core.content.edit

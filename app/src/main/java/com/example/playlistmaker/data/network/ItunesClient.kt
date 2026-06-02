@@ -1,17 +1,21 @@
-package com.example.playlistmaker.network
+package com.example.playlistmaker.data.network
 
-import com.example.playlistmaker.network.itunes.CustomDateTypeAdapter
-import com.example.playlistmaker.network.itunes.ItunesApi
+import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.NetworkConstants
+import com.example.playlistmaker.data.dto.Response
+import com.example.playlistmaker.data.dto.TrackDataTdo
+import com.example.playlistmaker.data.dto.TrackSearchResponse
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
 
-object ItunesClient {
+class ItunesClient : NetworkClient {
     private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.NONE
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
 
@@ -30,8 +34,13 @@ object ItunesClient {
         )
         .build();
 
-    val api: ItunesApi by lazy {
-        retrofit.create(ItunesApi::class.java)
+    val imdbService: ItunesApiService by lazy {
+        retrofit.create(ItunesApiService::class.java)
     }
+
+    override fun loadTracks( expression: String, callback: Callback<TrackSearchResponse>) {
+        imdbService.search(expression).enqueue(callback)
+    }
+
 
 }
