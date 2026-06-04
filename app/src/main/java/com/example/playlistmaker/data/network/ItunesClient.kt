@@ -15,7 +15,7 @@ import java.util.Date
 
 class ItunesClient : NetworkClient {
     private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.NONE
     }
 
 
