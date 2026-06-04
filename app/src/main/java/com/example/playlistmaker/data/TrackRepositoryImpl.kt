@@ -26,18 +26,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient): TrackReposi
                         val results: MutableList<TrackDataTdo> =
                             response.body()?.results ?: mutableListOf()
                         val result = results.map {
-                            TrackData(
-                                it.trackId,
-                                it.trackName,
-                                it.artistName,
-                                it.trackTimeMillis,
-                                it.artworkUrl100,
-                                it.collectionName,
-                                it.releaseDate,
-                                it.primaryGenreName,
-                                it.country,
-                                it.previewUrl
-                            )
+                            it.toTrackData()
                         }
                         onSuccess(result)
                     }else{

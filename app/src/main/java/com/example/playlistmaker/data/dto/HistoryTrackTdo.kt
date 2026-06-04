@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.dto
 
-data class TrackDataTdo(
+data class HistoryTrackTdo(
     val trackId: String,
     val trackName: String?,
     val artistName: String?,
@@ -12,3 +12,4 @@ data class TrackDataTdo(
     val country: String?,
     val previewUrl: String?
 )
+

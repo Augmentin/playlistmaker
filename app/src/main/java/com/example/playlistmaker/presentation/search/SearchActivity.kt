@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.presentation.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,10 +21,12 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.HistoryInteractor
+import com.example.playlistmaker.domain.api.TrackInteractor
 
 import com.example.playlistmaker.domain.models.TrackData
 import com.example.playlistmaker.preferences.PreferencesConstants
-import com.example.playlistmaker.ui.playlist.PlaylistActivity
+import com.example.playlistmaker.presentation.playlist.PlaylistActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 
@@ -43,8 +45,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapter: SongListAdapter
     private val trackList = mutableListOf<TrackData>()
 
-    private lateinit var searchHistory: SearchHistory
-
+    private lateinit var historyInteractor: HistoryInteractor
     private lateinit var placeholderImg: ImageView
     private lateinit var placeholderTitle: TextView
     private lateinit var placeholderMessage: TextView
@@ -60,6 +61,8 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var historySongItems: RecyclerView
     private lateinit var songItems: RecyclerView
+
+    private lateinit var tracksInteractor:TrackInteractor
     private var isClickAllowed = true
 
 
@@ -90,12 +93,9 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        searchHistory = SearchHistory(
-            getSharedPreferences(
-                PreferencesConstants.PLAYLISTMAKET_PREFERENCE,
-                MODE_PRIVATE
-            )
-        )
+        historyInteractor = Creator.provideHistoryInteractor(this)
+
+        tracksInteractor = Creator.provideTracksInteractor()
         viewHistoryGroup = findViewById(R.id.searchHistoryGroup)
         placeholderImg = findViewById(R.id.fail_img)
         placeholderTitle = findViewById(R.id.placeholderTitle)
@@ -106,13 +106,13 @@ class SearchActivity : AppCompatActivity() {
         historySongItems = findViewById(R.id.historySongItems)
         adapter = SongListAdapter(trackList, { track ->
             if (clickDebounce()) {
-                searchHistory.addToHistory(track)
+                historyInteractor.add(track)
                 val displayIntent = Intent(this, PlaylistActivity::class.java)
                 displayIntent.putExtra("TRACK", Gson().toJson(track))
                 startActivity(displayIntent)
             }
         })
-        historyAdapter = SongListAdapter(searchHistory.historyArray, { track ->
+        historyAdapter = SongListAdapter(historyInteractor.get(), { track ->
             if (clickDebounce()) {
                 val displayIntent = Intent(this, PlaylistActivity::class.java)
                 displayIntent.putExtra("TRACK", Gson().toJson(track))
@@ -127,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
         historyRefresh.setOnClickListener {
-            searchHistory.clearHistory()
+            historyInteractor.clear()
             historyAdapter.notifyDataSetChanged()
             viewHistoryGroup.isVisible = false
         }
@@ -180,7 +180,7 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             viewHistoryGroup.isVisible =
-                searchHistory.historyArray.size > 0 && hasFocus && inputEditText.text.isEmpty()
+                historyInteractor.size() > 0 && hasFocus && inputEditText.text.isEmpty()
             historyAdapter.notifyDataSetChanged()
         }
 
@@ -206,7 +206,7 @@ class SearchActivity : AppCompatActivity() {
             progressBar.isVisible = true
             songItems.isVisible = false
             val text = inputEditText.text;
-            Creator.provideTracksInteractor().searchTracks(current_search,
+            tracksInteractor.searchTracks(current_search,
                 onSuccess = { tracks ->
                     if(text.equals(inputEditText.text)){
                         progressBar.isVisible = false
@@ -240,8 +240,7 @@ class SearchActivity : AppCompatActivity() {
                        )
                        refreshButton.isVisible = true
                    }
-                }
-                )
+                })
         }
 
     }
