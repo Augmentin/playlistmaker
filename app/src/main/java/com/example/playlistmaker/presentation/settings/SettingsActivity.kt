@@ -1,16 +1,17 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.settings
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.textview.MaterialTextView
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_PREFERENCE
-import com.example.playlistmaker.preferences.PreferencesConstants.PLAYLISTMAKET_THEME_KEY
+import com.example.playlistmaker.R
+import com.example.playlistmaker.preferences.PreferencesConstants
+import com.example.playlistmaker.presentation.App
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -26,8 +27,8 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        val sharedPrefs = getSharedPreferences(PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
-        themeSwitcher.isChecked = sharedPrefs.getBoolean(PLAYLISTMAKET_THEME_KEY, false)
+        val sharedPrefs = getSharedPreferences(PreferencesConstants.PLAYLISTMAKET_PREFERENCE, MODE_PRIVATE)
+        themeSwitcher.isChecked = sharedPrefs.getBoolean(PreferencesConstants.PLAYLISTMAKET_THEME_KEY, false)
         themeSwitcher.setOnCheckedChangeListener { switcher, checked  ->
             (applicationContext as App).switchTheme(checked)
         }
