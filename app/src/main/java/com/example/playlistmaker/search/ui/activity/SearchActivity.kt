@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -65,6 +66,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var viewModel: SearchViewModel? = null
     private var historyListModel: HistoryViewModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -102,7 +104,8 @@ class SearchActivity : AppCompatActivity() {
             }
         })
         historyListModel?.observeState()?.observe(this){
-            historyAdapter.trackList = it as ArrayList<TrackData>
+            historyAdapter.trackList.clear()
+            historyAdapter.trackList.addAll(it as ArrayList<TrackData>)
             historyAdapter.notifyDataSetChanged()
         }
 
