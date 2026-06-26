@@ -15,7 +15,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
 
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.App
+import com.example.playlistmaker.App
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.TrackData
 

@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.playlistmaker.presentation.App"
+        android:name="com.example.playlistmaker.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -36,7 +36,7 @@
             android:name=".search.ui.activity.SearchActivity"
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker.Search" />
-        <activity android:name=".presentation.playlist.PlaylistActivity"
+        <activity android:name=".player.ui.PlaylistActivity"
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker.Search" />
     </application>

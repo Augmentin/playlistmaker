@@ -1,6 +1,4 @@
 package com.example.playlistmaker.search.ui.activity
-
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -16,14 +14,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.api.HistoryInteractor
-
 import com.example.playlistmaker.search.domain.models.TrackData
-import com.example.playlistmaker.presentation.playlist.PlaylistActivity
+import com.example.playlistmaker.player.ui.PlaylistActivity
 import com.example.playlistmaker.search.ui.view_model.HistoryViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel

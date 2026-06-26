@@ -8,7 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.preferences.PreferencesConstants
-import com.example.playlistmaker.presentation.App
+import com.example.playlistmaker.App
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
