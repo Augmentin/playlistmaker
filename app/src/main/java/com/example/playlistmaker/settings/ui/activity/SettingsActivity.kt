@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.settings
+package com.example.playlistmaker.settings.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.preferences.PreferencesConstants
-import com.example.playlistmaker.App
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
