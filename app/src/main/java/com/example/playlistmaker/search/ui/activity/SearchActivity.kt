@@ -168,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
         binding.inputEditText.setOnFocusChangeListener { view, hasFocus ->
             binding.searchHistoryGroup.isVisible =
                 historyListModel?.size()!! > 0 && hasFocus && binding.inputEditText.text.isEmpty()
-            historyAdapter.notifyDataSetChanged()
+
         }
 
     }
