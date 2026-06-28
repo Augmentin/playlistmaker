@@ -9,15 +9,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.playlistmaker.creator.Creator
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val url: String) : ViewModel() {
+class PlayerViewModel(private val url: String, private val mediaPlayer: MediaPlayer) : ViewModel() {
 
     companion object {
         fun getFactory(trackUrl: String): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                PlayerViewModel(trackUrl)
+                PlayerViewModel(trackUrl, Creator.getMediaPlayer())
             }
         }
     }
@@ -26,7 +27,7 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
 
-    private val mediaPlayer = MediaPlayer()
+
 
     private val handler = Handler(Looper.getMainLooper())
 

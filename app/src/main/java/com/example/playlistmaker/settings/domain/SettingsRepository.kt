@@ -1,6 +1,4 @@
-package com.example.playlistmaker.settings.data
-
-import com.example.playlistmaker.settings.domain.ThemeSettings
+package com.example.playlistmaker.settings.domain
 
 interface SettingsRepository {
     fun getThemeSettings(): ThemeSettings

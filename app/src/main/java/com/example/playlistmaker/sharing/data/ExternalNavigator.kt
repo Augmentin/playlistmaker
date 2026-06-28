@@ -44,4 +44,22 @@ class ExternalNavigator(val content: Context) {
         }
         content.startActivity(intent)
     }
+
+
+    private fun getShareAppLink(): String {
+        return content.getString(R.string.share_text)
+    }
+
+    private fun getSupportEmailData(): EmailData {
+        return EmailData(
+            content.getString(R.string.support_email),
+            content.getString(R.string.support_subject),
+            content.getString(R.string.support_body)
+        )
+    }
+
+    private fun getTermsLink(): String {
+        return  content.getString(R.string.practicum_offer_link)
+    }
+
 }

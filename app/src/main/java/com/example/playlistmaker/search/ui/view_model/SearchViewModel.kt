@@ -19,7 +19,7 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.TrackData
 
-class SearchViewModel(private val context: Context): ViewModel()  {
+class SearchViewModel(private val context: Context, private val tracksInteractor: TrackInteractor ): ViewModel()  {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -28,13 +28,13 @@ class SearchViewModel(private val context: Context): ViewModel()  {
         fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as App)
-                SearchViewModel(app)
+                SearchViewModel(app, Creator.provideTracksInteractor(app))
             }
         }
     }
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
-    private var tracksInteractor: TrackInteractor = Creator.provideTracksInteractor(context)
+
     private var latestSearchText: String = ""
     private val handler = Handler(Looper.getMainLooper())
 

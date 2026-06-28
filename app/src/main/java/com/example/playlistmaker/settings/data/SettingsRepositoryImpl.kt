@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.preferences.PreferencesConstants
+import com.example.playlistmaker.settings.domain.SettingsRepository
 import com.example.playlistmaker.settings.domain.ThemeSettings
 
 class SettingsRepositoryImpl(val content: Context): SettingsRepository {
