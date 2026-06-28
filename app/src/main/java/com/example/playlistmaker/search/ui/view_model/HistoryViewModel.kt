@@ -16,7 +16,6 @@ import com.example.playlistmaker.search.domain.models.TrackData
 class HistoryViewModel(private val context: Context ) : ViewModel()  {
 
     companion object {
-
         fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as App)

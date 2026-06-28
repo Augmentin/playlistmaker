@@ -11,6 +11,13 @@ import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.api.TrackRepository
 import com.example.playlistmaker.search.domain.impl.HistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TrackInteractorImpl
+import com.example.playlistmaker.settings.data.SettingsRepository
+import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
+import com.example.playlistmaker.settings.domain.SettingsInteractor
+import com.example.playlistmaker.settings.domain.SettingsInteractorImpl
+import com.example.playlistmaker.sharing.data.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.impl.SharingInteractor
+import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
     fun provideTracksInteractor(content: Context): TrackInteractor {
@@ -21,6 +28,21 @@ object Creator {
         return HistoryInteractorImpl(getHistoryRepository(content))
     }
 
+    fun provideSettingsInteractor(content: Context): SettingsInteractor{
+        return SettingsInteractorImpl(getSettingsRepository(content))
+    }
+    fun provideSharingInteractor(content: Context): SharingInteractor{
+        return SharingInteractorImpl(
+            getSharingRepository(content),
+            content
+        )
+    }
+    private fun getSharingRepository(content: Context): ExternalNavigator{
+        return ExternalNavigator(content)
+    }
+    private fun getSettingsRepository(content: Context): SettingsRepository{
+        return SettingsRepositoryImpl(content)
+    }
     private fun getHistoryRepository(content: Context): HistoryRepository {
         return HistoryRepositoryImpl(
             content.getSharedPreferences(
