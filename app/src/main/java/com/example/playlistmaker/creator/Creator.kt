@@ -23,13 +23,6 @@ import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import kotlin.lazy
 
 object Creator {
-    fun provideTracksInteractor(content: Context): TrackInteractor {
-        return TrackInteractorImpl(getTracksRepository(content))
-    }
-
-    fun provideHistoryInteractor(content: Context): HistoryInteractor {
-        return HistoryInteractorImpl(getHistoryRepository(content))
-    }
 
     fun provideSettingsInteractor(content: Context): SettingsInteractor{
         return SettingsInteractorImpl(getSettingsRepository(content))
@@ -40,25 +33,11 @@ object Creator {
         )
     }
 
-    fun getMediaPlayer(): MediaPlayer{
-        return MediaPlayer()
-    }
     private fun getSharingRepository(content: Context): ExternalNavigator{
         return ExternalNavigator(content)
     }
     private fun getSettingsRepository(content: Context): SettingsRepository{
         return SettingsRepositoryImpl(content)
-    }
-    private fun getHistoryRepository(content: Context): HistoryRepository {
-        return HistoryRepositoryImpl(
-            content.getSharedPreferences(
-                PreferencesConstants.PLAYLISTMAKET_PREFERENCE,
-                Context.MODE_PRIVATE
-            )
-        )
-    }
-    private fun getTracksRepository(content: Context): TrackRepository {
-        return TrackRepositoryImpl(ItunesClient(content))
     }
 
 }

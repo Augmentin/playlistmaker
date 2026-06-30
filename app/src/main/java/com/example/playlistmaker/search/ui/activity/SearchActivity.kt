@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.TrackData
@@ -21,6 +21,7 @@ import com.example.playlistmaker.player.ui.PlaylistActivity
 import com.example.playlistmaker.search.ui.view_model.HistoryViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 import com.google.gson.Gson
 
@@ -58,8 +59,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    private var viewModel: SearchViewModel? = null
-    private var historyListModel: HistoryViewModel? = null
+    private val viewModel by viewModel<SearchViewModel>()
+    private val historyListModel by viewModel<HistoryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -74,17 +75,13 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getFactory())
-            .get(SearchViewModel::class.java)
-        historyListModel = ViewModelProvider(this, HistoryViewModel.getFactory())
-            .get(HistoryViewModel::class.java)
-        viewModel?.observeState()?.observe(this) {
+        viewModel.observeState().observe(this) {
             render(it)
         }
 
         adapter = SongListAdapter( { track ->
             if (clickDebounce()) {
-                historyListModel?.add(track)
+                historyListModel.add(track)
                 val displayIntent = Intent(this, PlaylistActivity::class.java)
                 displayIntent.putExtra("TRACK", Gson().toJson(track))
                 startActivity(displayIntent)
@@ -97,7 +94,7 @@ class SearchActivity : AppCompatActivity() {
                 startActivity(displayIntent)
             }
         })
-        historyListModel?.observeState()?.observe(this){
+        historyListModel.observeState()?.observe(this){
             historyAdapter.trackList.clear()
             historyAdapter.trackList.addAll(it as ArrayList<TrackData>)
             historyAdapter.notifyDataSetChanged()
@@ -111,7 +108,7 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
         binding.historyRefresh.setOnClickListener {
-            historyListModel?.clear()
+            historyListModel.clear()
             binding.searchHistoryGroup.isVisible = false
         }
 
@@ -131,14 +128,14 @@ class SearchActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
         binding.refresh.setOnClickListener {
-            viewModel?.searchNow(current_search)
+            viewModel.searchNow(current_search)
         }
 
         binding.inputEditText.setOnEditorActionListener { _, actionId, event  ->
 
             if (actionId == EditorInfo.IME_ACTION_DONE
                 || actionId == EditorInfo.IME_ACTION_SEARCH) {
-                viewModel?.searchNow(current_search)
+                viewModel.searchNow(current_search)
             }
             false
         }
@@ -154,14 +151,14 @@ class SearchActivity : AppCompatActivity() {
             showEmptyForm()
             binding.searchHistoryGroup.isVisible = binding.inputEditText.hasFocus() && s?.isEmpty() == true
             binding.clearIcon.isVisible = !s.isNullOrEmpty()
-            viewModel?.searchDebounce(current_search)
+            viewModel.searchDebounce(current_search)
 
 
         }
 
         binding.inputEditText.setOnFocusChangeListener { view, hasFocus ->
             binding.searchHistoryGroup.isVisible =
-                historyListModel?.size()!! > 0 && hasFocus && binding.inputEditText.text.isEmpty()
+                historyListModel.size() > 0 && hasFocus && binding.inputEditText.text.isEmpty()
 
         }
 

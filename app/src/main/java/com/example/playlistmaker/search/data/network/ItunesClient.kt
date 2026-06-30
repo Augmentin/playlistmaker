@@ -16,30 +16,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
 
-class ItunesClient(private val context: Context) : NetworkClient {
-    private val logging = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.NONE
-    }
-
-
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build()
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(NetworkConstants.ITUNES_BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(
-            GsonConverterFactory.create(
-                GsonBuilder()
-                    .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
-                    .create()
-            )
-        )
-        .build();
-
-    val itunesService: ItunesApiService by lazy {
-        retrofit.create(ItunesApiService::class.java)
-    }
+class ItunesClient(
+    private val itunesService: ItunesApiService,
+    private val context: Context
+) : NetworkClient {
 
 
     override fun doRequest(dto: Any): Response {

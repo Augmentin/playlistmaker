@@ -13,23 +13,12 @@ import com.example.playlistmaker.search.domain.api.HistoryInteractor
 
 import com.example.playlistmaker.search.domain.models.TrackData
 
-class HistoryViewModel(private val context: Context ) : ViewModel()  {
+class HistoryViewModel(private val historyInteractor: HistoryInteractor ) : ViewModel()  {
 
-    companion object {
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as App)
-                HistoryViewModel(app)
-            }
-        }
-    }
     private val stateLiveData = MutableLiveData<MutableList<TrackData>>()
     fun observeState(): LiveData<MutableList<TrackData>> = stateLiveData
 
-
-    private var historyInteractor: HistoryInteractor;
     init {
-        historyInteractor = Creator.provideHistoryInteractor(context)
         stateLiveData.postValue(historyInteractor.get())
     }
     fun add(track: TrackData){
