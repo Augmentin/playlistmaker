@@ -3,31 +3,19 @@ package com.example.playlistmaker.player.ui
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(private val url: String, private val mediaPlayer: MediaPlayer) : ViewModel() {
 
-    companion object {
-        fun getFactory(trackUrl: String): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(trackUrl, Creator.getMediaPlayer())
-            }
-        }
-    }
 
     private val playerStateLiveData = MutableLiveData(PlayerState())
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
-
-
-
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -58,6 +46,8 @@ class PlayerViewModel(private val url: String, private val mediaPlayer: MediaPla
     }
 
     private fun preparePlayer() {
+
+        Log.d("PLAYER", "url = '$url'")
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
