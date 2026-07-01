@@ -8,11 +8,11 @@ import org.koin.dsl.module
 
 val interactorModule = module {
 
-    single<HistoryInteractor> {
+    factory<HistoryInteractor> {
         HistoryInteractorImpl(get())
     }
 
-    single<TrackInteractor> {
+    factory<TrackInteractor> {
         TrackInteractorImpl(get())
     }
 }

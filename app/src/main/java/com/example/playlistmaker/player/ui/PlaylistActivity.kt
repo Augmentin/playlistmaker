@@ -23,10 +23,10 @@ class PlaylistActivity  : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityPlaylistBinding
-    private var url: String = ""
+    private lateinit var trackData: TrackData
 
     private val  viewModel: PlayerViewModel by viewModel{
-        parametersOf(url)
+        parametersOf(trackData)
     }
 
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
@@ -52,7 +52,7 @@ class PlaylistActivity  : AppCompatActivity() {
         var json = intent.getStringExtra("TRACK")
         Log.i("Track", json ?: "")
         val track = Gson().fromJson(json, TrackData::class.java)
-
+        trackData = track
 
         binding.trackTitle.text = track.trackName?.trim() ?: "Undefined"
         binding.trackArtist.text = track.artistName?.trim() ?: "Undefined"
@@ -81,9 +81,7 @@ class PlaylistActivity  : AppCompatActivity() {
         binding.genreValue.text = track.primaryGenreName
 
         binding.countryValue.text = track.country
-        if(track.previewUrl != null){
-            url =  track.previewUrl;
-        }
+
         viewModel.observePlayerState().observe(this) {
             when(it.status){
                 PlayerStatus.PREPARED -> {

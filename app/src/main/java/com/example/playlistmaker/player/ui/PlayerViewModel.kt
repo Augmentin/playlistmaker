@@ -7,11 +7,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.search.domain.models.TrackData
 
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val url: String, private val mediaPlayer: MediaPlayer) : ViewModel() {
+class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer: MediaPlayer) : ViewModel() {
 
 
     private val playerStateLiveData = MutableLiveData(PlayerState())
@@ -47,20 +48,23 @@ class PlayerViewModel(private val url: String, private val mediaPlayer: MediaPla
 
     private fun preparePlayer() {
 
-        Log.d("PLAYER", "url = '$url'")
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            val o =  playerStateLiveData.value;
-            o?.status = PlayerStatus.PREPARED
-            playerStateLiveData.postValue(o)
+        Log.d("PLAYER", "trackData = '$trackData'")
+        if(!trackData.previewUrl.isNullOrBlank()){
+            mediaPlayer.setDataSource(trackData.previewUrl)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                val o =  playerStateLiveData.value;
+                o?.status = PlayerStatus.PREPARED
+                playerStateLiveData.postValue(o)
+            }
+            mediaPlayer.setOnCompletionListener {
+                val o =  playerStateLiveData.value;
+                o?.status = PlayerStatus.PREPARED
+                playerStateLiveData.postValue(o)
+                resetTimer()
+            }
         }
-        mediaPlayer.setOnCompletionListener {
-            val o =  playerStateLiveData.value;
-            o?.status = PlayerStatus.PREPARED
-            playerStateLiveData.postValue(o)
-            resetTimer()
-        }
+
     }
 
     private fun startPlayer() {
