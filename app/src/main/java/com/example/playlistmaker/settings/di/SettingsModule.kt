@@ -16,7 +16,7 @@ val settingsModule = module {
         SettingsRepositoryImpl(androidContext())
     }
 
-    single<SettingsInteractor> {
+    factory<SettingsInteractor> {
         SettingsInteractorImpl(get())
     }
 
