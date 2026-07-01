@@ -1,4 +1,6 @@
 package com.example.playlistmaker.search.ui.activity
+
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -6,24 +8,20 @@ import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.search.domain.models.TrackData
 import com.example.playlistmaker.player.ui.PlaylistActivity
+import com.example.playlistmaker.search.domain.models.TrackData
 import com.example.playlistmaker.search.ui.view_model.HistoryViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {

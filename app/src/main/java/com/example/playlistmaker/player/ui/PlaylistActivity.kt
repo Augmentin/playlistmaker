@@ -2,24 +2,22 @@ package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
 import android.util.Log
-
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlaylistBinding
 import com.example.playlistmaker.search.domain.models.TrackData
 import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlaylistActivity  : AppCompatActivity() {
 
