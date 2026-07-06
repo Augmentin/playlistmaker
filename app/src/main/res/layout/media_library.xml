@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/media_view"
+    tools:context=".medialibrary.ui.activity.MediaLibraryActivity"
+    >
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/arrow_back"
+        style="@style/ToolbarMainText"
+        android:id="@+id/back_toolbar"
+        app:title="@string/media"
+        />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/white_black"
+        app:tabTextAppearance="@style/TabTextAppearance"
+        android:layout_marginHorizontal="@dimen/sp16"
+        app:tabRippleColor="@color/light_gray_2"
+        app:tabTextColor="?attr/black_white"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorColor="?attr/black_white"/>
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_marginTop="22dp"
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

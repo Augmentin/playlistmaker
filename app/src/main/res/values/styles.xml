@@ -21,7 +21,11 @@
     <style name="MainButton.Settings" >
         <item name="icon">@drawable/settings</item>
     </style>
-    
+    <style name="TabTextAppearance"  parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
     <style name="TextAppearanceSettings" >
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>

@@ -15,7 +15,6 @@
         <item name="title_text_color">@color/black</item>
         <item name="menu_text_color">@color/black</item>
     </style>
-
     <style name="Theme.PlaylistMaker.Search" parent="Base.Theme.PlaylistMaker">
         <item name="title_text_color">@color/black</item>
         <item name="search_input_background">@color/light_grey</item>

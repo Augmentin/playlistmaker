@@ -30,7 +30,8 @@
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker.Settings" />
         <activity
-            android:name=".medialibrary.ui.MediaLibraryActivity"
+            android:name=".medialibrary.ui.activity.MediaLibraryActivity"
+            android:theme="@style/Theme.PlaylistMaker.Search"
             android:exported="false" />
         <activity
             android:name=".search.ui.activity.SearchActivity"

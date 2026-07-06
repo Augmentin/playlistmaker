@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import com.example.playlistmaker.medialibrary.di.medialibraryViewModelModule
 
 import com.example.playlistmaker.player.di.playerViewModelModule
 import com.example.playlistmaker.search.di.dataModule
@@ -31,7 +32,8 @@ class App : Application() {
                 networkModule,
                 playerViewModelModule,
                 settingsModule,
-                sharingModule
+                sharingModule,
+                medialibraryViewModelModule
             )
         }
 

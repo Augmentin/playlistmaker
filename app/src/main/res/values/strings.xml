@@ -28,4 +28,9 @@
     <string name="genre" translatable="false">Жанр</string>
     <string name="country" translatable="false">Страна</string>
     <string name="_00_00"  translatable="false" >00:00</string>
+    <string name="empty_favorites" translatable="false">Ваша медиатека пуста</string>
+    <string name="empty_playlist" translatable="false">Вы не создали ни одного плейлиста</string>
+    <string name="new_playlist" translatable="false">Новый плейлист</string>
+    <string name="fav_tabs" translatable="false">Избранные треки</string>
+    <string name="playlist_tabs" translatable="false">Плейлисты</string>
 </resources>
