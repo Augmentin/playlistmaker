@@ -15,19 +15,18 @@ import kotlin.getValue
 
 class PlayListFragment: Fragment() {
 
-    companion object {
-        fun newInstance() = PlayListFragment()
-    }
-
     private val playlistModel: PlayListModel by viewModel()
-    private lateinit var binding: FragmentMedialibraryBinding
+    private var _binding: FragmentMedialibraryBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +37,10 @@ class PlayListFragment: Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     fun rander(state: PlayListState){
         when(state){
             is  PlayListState.Loading -> {}
@@ -55,5 +58,9 @@ class PlayListFragment: Fragment() {
         binding.placeholderTitle.isVisible = true
         binding.failImg.setImageResource(img)
         binding.placeholderTitle.text = massage
+    }
+
+    companion object {
+        fun newInstance() = PlayListFragment()
     }
 }

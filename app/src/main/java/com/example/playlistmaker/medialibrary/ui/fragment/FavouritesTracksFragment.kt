@@ -15,20 +15,18 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouritesTracksFragment: Fragment() {
 
-    companion object {
-        fun newInstance() = FavouritesTracksFragment()
-    }
-
     private val favouritesTracksModel: FavouritesModel by viewModel()
-    private lateinit var binding: FragmentMedialibraryBinding
+    private var _binding: FragmentMedialibraryBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +37,10 @@ class FavouritesTracksFragment: Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     fun rander(state:FavouritesTracksState){
         when(state){
             is  FavouritesTracksState.Loading -> {}
@@ -56,5 +58,9 @@ class FavouritesTracksFragment: Fragment() {
         binding.placeholderTitle.isVisible = true
         binding.failImg.setImageResource(img)
         binding.placeholderTitle.text = massage
+    }
+
+    companion object {
+        fun newInstance() = FavouritesTracksFragment()
     }
 }
