@@ -7,17 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/settings_view"
-    tools:context=".settings.ui.activity.SettingsActivity"
+    tools:context=".settings.ui.activity.SettingsFragment"
     >
-    <com.google.android.material.appbar.MaterialToolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/arrow_back"
-        style="@style/ToolbarMainText"
-        android:id="@+id/back_toolbar"
-        app:title="@string/settings"
-        />
-
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

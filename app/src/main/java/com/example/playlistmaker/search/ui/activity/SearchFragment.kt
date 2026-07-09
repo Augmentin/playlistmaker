@@ -1,30 +1,35 @@
 package com.example.playlistmaker.search.ui.activity
 
-
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.PlaylistActivity
+
+import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.PlayerFragment
+
 import com.example.playlistmaker.search.domain.models.TrackData
 import com.example.playlistmaker.search.ui.view_model.HistoryViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment  : Fragment() {
 
     private var current_search: String = STRING_DEF
 
@@ -34,7 +39,9 @@ class SearchActivity : AppCompatActivity() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    private lateinit var binding: ActivitySearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
 
     private lateinit var adapter: SongListAdapter
 
@@ -50,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
         if (isClickAllowed) {
             isClickAllowed = false
             handler.postDelayed({ isClickAllowed = true },
-                CLICK_DEBOUNCE_DELAY
+                SearchFragment.Companion.CLICK_DEBOUNCE_DELAY
             )
         }
         return current
@@ -60,12 +67,16 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel by viewModel<SearchViewModel>()
     private val historyListModel by viewModel<HistoryViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
 
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.searchView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -73,26 +84,26 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
         adapter = SongListAdapter( { track ->
             if (clickDebounce()) {
                 historyListModel.add(track)
-                val displayIntent = Intent(this, PlaylistActivity::class.java)
-                displayIntent.putExtra("TRACK", Gson().toJson(track))
-                startActivity(displayIntent)
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerFragment,
+                    PlayerFragment.createArgs(Gson().toJson(track)))
             }
         })
         historyAdapter = SongListAdapter( { track ->
             if (clickDebounce()) {
-                val displayIntent = Intent(this, PlaylistActivity::class.java)
-                displayIntent.putExtra("TRACK", Gson().toJson(track))
-                startActivity(displayIntent)
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerFragment,
+                    PlayerFragment.createArgs(Gson().toJson(track)))
             }
         })
-        historyListModel.observeState()?.observe(this){
+        historyListModel.observeState().observe(viewLifecycleOwner){
             historyAdapter.trackList.clear()
             historyAdapter.trackList.addAll(it as ArrayList<TrackData>)
             historyAdapter.notifyDataSetChanged()
@@ -102,9 +113,6 @@ class SearchActivity : AppCompatActivity() {
         binding.historySongItems.adapter = historyAdapter
 
 
-        binding.backToolbar.setNavigationOnClickListener {
-            finish()
-        }
         binding.historyRefresh.setOnClickListener {
             historyListModel.clear()
             binding.searchHistoryGroup.isVisible = false
@@ -115,9 +123,8 @@ class SearchActivity : AppCompatActivity() {
         binding.inputEditText.setText(current_search)
 
         binding.clearIcon.setOnClickListener {
-            val inputMethodManager =
-                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(binding.searchView.windowToken, 0)
+            hideKeyboard()
+            viewModel.clearSearch()
             binding.inputEditText.setText("")
             binding.inputEditText.clearFocus()
             binding.inputEditText.setHint(R.string.search_hint)
@@ -159,21 +166,31 @@ class SearchActivity : AppCompatActivity() {
                 historyListModel.size() > 0 && hasFocus && binding.inputEditText.text.isEmpty()
 
         }
-
     }
-
-
+    /*
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         //Log.i("onSaveInstanceState", current_search)
-        outState.putString(SEARCH_STRING, current_search)
+        outState.putString(SearchActivity.Companion.SEARCH_STRING, current_search)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        current_search = savedInstanceState.getString(SEARCH_STRING, STRING_DEF)
+        current_search = savedInstanceState.getString(
+            SearchActivity.Companion.SEARCH_STRING,
+            SearchActivity.Companion.STRING_DEF
+        )
+    }*/
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
+     fun hideKeyboard() {
+        val imm = requireContext()
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
     fun render(state: SearchState) {
         showEmptyForm()
 
@@ -187,7 +204,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun showEmpty(message: String, int: Int){
-        showMessage(message, "", int)
+        if(int != -1){
+            showMessage(message, "", int)
+        }
 
     }
     fun showError(errorMessage: String, errorPlaceholderMessage: String? = null, img: Int? = null ){

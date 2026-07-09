@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.databinding.FragmentMedialibraryBinding
-import com.example.playlistmaker.medialibrary.ui.view_model.FavouritesTracksState
+
+import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
 import com.example.playlistmaker.medialibrary.ui.view_model.PlayListModel
 import com.example.playlistmaker.medialibrary.ui.view_model.PlayListState
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -16,7 +16,7 @@ import kotlin.getValue
 class PlayListFragment: Fragment() {
 
     private val playlistModel: PlayListModel by viewModel()
-    private var _binding: FragmentMedialibraryBinding? = null
+    private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -24,7 +24,7 @@ class PlayListFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentMedialibraryBinding.inflate(inflater, container, false)
+        _binding = FragmentMedialibraryTabBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
