@@ -52,6 +52,15 @@ class SearchViewModel(private val context: Context, private val tracksInteractor
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         searchRequest( changedText)
     }
+
+    fun clearSearch(){
+        renderState(
+            SearchState.Empty(
+                message = "",
+                img = -1
+            )
+        )
+    }
      private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
             renderState(

@@ -15,31 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.PlaylistMaker">
-        <activity
-            android:name=".main.ui.MainActivity"
+        <activity android:name=".root.ui.RootActivity"
             android:exported="true"
-            android:theme="@style/Theme.PlaylistMaker.Main">
+            android:theme="@style/Theme.PlaylistMaker.Main"
+            android:windowSoftInputMode="adjustNothing"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".settings.ui.activity.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.PlaylistMaker.Settings" />
-        <activity
-            android:name=".medialibrary.ui.activity.MediaLibraryActivity"
-            android:theme="@style/Theme.PlaylistMaker.Search"
-            android:exported="false" />
-        <activity
-            android:name=".search.ui.activity.SearchActivity"
-            android:exported="false"
-            android:theme="@style/Theme.PlaylistMaker.Search" />
-        <activity android:name=".player.ui.PlaylistActivity"
-            android:exported="false"
-            android:theme="@style/Theme.PlaylistMaker.Search" />
+
     </application>
 
 </manifest>
