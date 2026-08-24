@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -42,7 +41,7 @@ class PlayerFragment : Fragment() {
 
     private lateinit var trackData: TrackData
 
-    private val  viewModel: PlayerViewModel by viewModel{
+    private val  playerViewModel: PlayerViewModel by viewModel{
         parametersOf(trackData)
     }
 
@@ -101,25 +100,10 @@ class PlayerFragment : Fragment() {
 
         binding.countryValue.text = track.country
 
-        viewModel.observePlayerState().observe(this) {
-            when(it.status){
-                PlayerStatus.PREPARED -> {
-                    binding.playButton.isEnabled = true
-                    binding.playButton.setImageResource(R.drawable.play_button)
-                }
-                PlayerStatus.PLAYING -> {
-                    binding.playButton.setImageResource(R.drawable.pause)
-                }
-
-                PlayerStatus.PAUSED ->{
-                    binding.playButton.setImageResource(R.drawable.play_button)
-                }
-
-                else -> {
-                    binding.playButton.setImageResource(R.drawable.play_button)
-                }
-            }
-            binding.trackTime.text = it?.time ?: "00:00"
+        playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
+            binding.playButton.setImageResource(it.buttonImage)
+            binding.playButton.isEnabled =  it.isPlayButtonEnabled
+            binding.trackTime.text = it.progress
         }
 
         if(track?.previewUrl.isNullOrBlank()){
@@ -127,7 +111,7 @@ class PlayerFragment : Fragment() {
         }
 
         binding.playButton.setOnClickListener {
-            viewModel.onPlayButtonClicked()
+            playerViewModel.onPlayButtonClicked()
         }
         Glide.with(this).load(track?.getCoverArtwork())
             .placeholder(R.drawable.placeholder)
@@ -143,7 +127,7 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.onPause()
+        playerViewModel.onPause()
     }
     override fun onDestroyView() {
         super.onDestroyView()
