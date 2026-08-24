@@ -22,7 +22,7 @@ class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer
 
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerState
-
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     init {
         initMediaPlayer()
     }
@@ -30,7 +30,6 @@ class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer
     override fun onCleared() {
         super.onCleared()
         releasePlayer()
-        // resetTimer()
     }
 
     fun onPause() {
@@ -83,6 +82,7 @@ class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer
 
 
     private fun startTimer() {
+        timerJob?.cancel()
         timerJob = viewModelScope.launch {
             while (mediaPlayer.isPlaying) {
                 delay(300L)
@@ -92,7 +92,7 @@ class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer
     }
 
     private fun getCurrentPlayerPosition(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition) ?: "00:00"
+        return dateFormat.format(mediaPlayer.currentPosition) ?: "00:00"
     }
 
 }
