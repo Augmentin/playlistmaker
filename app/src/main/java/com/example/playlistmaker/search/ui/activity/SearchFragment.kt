@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 
@@ -24,6 +25,7 @@ import com.example.playlistmaker.search.domain.models.TrackData
 import com.example.playlistmaker.search.ui.view_model.HistoryViewModel
 import com.example.playlistmaker.search.ui.view_model.SearchState
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
@@ -45,23 +47,13 @@ class SearchFragment  : Fragment() {
 
     private lateinit var adapter: SongListAdapter
 
-
+    private lateinit var onTrackClickDebounce: (TrackData) -> Unit
+    private lateinit var onHistoryClickDebounce: (TrackData) -> Unit
     private lateinit var historyAdapter: SongListAdapter
 
-    private var isClickAllowed = true
 
 
-    private val handler = Handler(Looper.getMainLooper())
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true },
-                SearchFragment.Companion.CLICK_DEBOUNCE_DELAY
-            )
-        }
-        return current
-    }
+
 
 
     private val viewModel by viewModel<SearchViewModel>()
@@ -84,24 +76,25 @@ class SearchFragment  : Fragment() {
             insets
         }
 
+        onTrackClickDebounce = debounce<TrackData>(
+            CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false)
+        { track ->
+            openPlayer(track, true)
+        }
+        onHistoryClickDebounce = debounce<TrackData>(
+            CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false)
+        { track ->
+            openPlayer(track, false)
+        }
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
         adapter = SongListAdapter( { track ->
-            if (clickDebounce()) {
-                historyListModel.add(track)
-                findNavController().navigate(
-                    R.id.action_searchFragment_to_playerFragment,
-                    PlayerFragment.createArgs(Gson().toJson(track)))
-            }
+            onTrackClickDebounce(track)
         })
         historyAdapter = SongListAdapter( { track ->
-            if (clickDebounce()) {
-                findNavController().navigate(
-                    R.id.action_searchFragment_to_playerFragment,
-                    PlayerFragment.createArgs(Gson().toJson(track)))
-            }
+             onHistoryClickDebounce(track)
         })
         historyListModel.observeState().observe(viewLifecycleOwner){
             historyAdapter.trackList.clear()
@@ -225,7 +218,16 @@ class SearchFragment  : Fragment() {
         binding.progressBar.isVisible = true
     }
 
+    private fun openPlayer(track: TrackData, addToHistory: Boolean) {
+        if (addToHistory) {
+            historyListModel.add(track)
+        }
 
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            PlayerFragment.createArgs(Gson().toJson(track))
+        )
+    }
     private fun showEmptyForm() {
         binding.progressBar.isVisible = false
         binding.songItems.isVisible = false
