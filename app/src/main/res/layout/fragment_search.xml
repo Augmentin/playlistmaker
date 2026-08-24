@@ -9,7 +9,13 @@
     android:id="@+id/search_view"
     tools:context=".search.ui.activity.SearchFragment"
     >
-
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ToolbarMainText"
+        android:id="@+id/back_toolbar"
+        app:title="@string/search"
+        />
     <FrameLayout
         android:layout_margin="@dimen/search_margin_size"
         android:layout_width="match_parent"
