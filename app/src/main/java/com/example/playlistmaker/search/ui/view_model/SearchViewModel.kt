@@ -1,10 +1,6 @@
 package com.example.playlistmaker.search.ui.view_model
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
-
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,25 +9,31 @@ import androidx.lifecycle.viewModelScope
 
 
 import com.example.playlistmaker.R
+import com.example.playlistmaker.db.domain.api.FavoritesTracksInteractor
 
 import com.example.playlistmaker.search.domain.api.TrackInteractor
 import com.example.playlistmaker.search.domain.models.TrackData
-import com.example.playlistmaker.util.debounce
+import com.example.playlistmaker.util.Debounce
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val context: Context, private val tracksInteractor: TrackInteractor ): ViewModel()  {
+class SearchViewModel(private val context: Context, private val tracksInteractor: TrackInteractor,
+                      private val  favoritesTracksInteractor: FavoritesTracksInteractor ): ViewModel()  {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-
-
     }
+
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
 
     private var latestSearchText: String = ""
     private val trackSearchDebounce =
-        debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) { changedText ->
+        Debounce<String>(
+            delayMillis = SEARCH_DEBOUNCE_DELAY,
+            coroutineScope = viewModelScope,
+            useLastParam = true
+        ) { changedText ->
             searchRequest(changedText)
         }
 
@@ -40,13 +42,34 @@ class SearchViewModel(private val context: Context, private val tracksInteractor
             return
         }
         latestSearchText = changedText
-
+        trackSearchDebounce.cancel()
         if(latestSearchText.isNotEmpty()){
             trackSearchDebounce(changedText)
         }
 
     }
 
+    fun updateFavorites() {
+        val currentState = stateLiveData.value as? SearchState.Content ?: return
+        val currentTracks = currentState.tracks
+
+        if (currentTracks.isEmpty()) return
+        viewModelScope.launch {
+            val favoriteIds = favoritesTracksInteractor
+                .getExistTracks(currentTracks.map { it.trackId })
+                .first()
+                .toHashSet()
+
+            val updatedTracks = currentTracks.map { track ->
+                track.copy(
+                    isFavorite = track.trackId in favoriteIds
+                )
+            }
+            renderState(
+                SearchState.Content(updatedTracks)
+            )
+        }
+    }
     fun searchNow(changedText: String){
         this.latestSearchText = changedText
         searchRequest( changedText)
@@ -110,9 +133,13 @@ class SearchViewModel(private val context: Context, private val tracksInteractor
             renderState(
                 SearchState.Loading
             )
+            val txt = newSearchText;
             viewModelScope.launch {
                 tracksInteractor.searchTracks(newSearchText).collect {
-                    pair -> processResult(pair.first, pair.second)
+                    pair ->
+                    if(txt == latestSearchText){
+                        processResult(pair.first, pair.second)
+                    }
                 }
             }
         }

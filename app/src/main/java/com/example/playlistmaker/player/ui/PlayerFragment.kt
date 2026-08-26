@@ -78,7 +78,11 @@ class PlayerFragment : Fragment() {
         binding.durationValue.text = track.trackTimeMillis?.let {
             dateFormat.format(it)
         } ?: "00:00"
-
+        if(trackData.isFavorite){
+            binding.likeButton.setImageResource(R.drawable.active_like)
+        }else{
+            binding.likeButton.setImageResource(R.drawable.unactive_like)
+        }
         if(track.collectionName.isNullOrEmpty()){
             binding.albumValue.isVisible =  false
             binding.album.isVisible =  false
@@ -105,13 +109,22 @@ class PlayerFragment : Fragment() {
             binding.playButton.isEnabled =  it.isPlayButtonEnabled
             binding.trackTime.text = it.progress
         }
-
+        playerViewModel.observeFavoriteState().observe(viewLifecycleOwner){
+            if(it){
+                binding.likeButton.setImageResource(R.drawable.active_like)
+            }else{
+                binding.likeButton.setImageResource(R.drawable.unactive_like)
+            }
+        }
         if(track?.previewUrl.isNullOrBlank()){
             binding.playButton.isEnabled = false
         }
 
         binding.playButton.setOnClickListener {
             playerViewModel.onPlayButtonClicked()
+        }
+        binding.likeButton.setOnClickListener {
+            playerViewModel.onClickLike()
         }
         Glide.with(this).load(track?.getCoverArtwork())
             .placeholder(R.drawable.placeholder)
