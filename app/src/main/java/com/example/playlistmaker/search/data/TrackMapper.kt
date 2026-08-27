@@ -17,7 +17,6 @@ fun TrackData.toHistoryTrackTdo() = HistoryTrackTdo(
     primaryGenreName = primaryGenreName,
     country = country,
     previewUrl = previewUrl,
-    isFavorite = isFavorite
 )
 fun TrackData.toTrackDataTdo() = TrackDataTdo(
     trackId = trackId,
@@ -56,7 +55,6 @@ fun HistoryTrackTdo.toTrackData() = TrackData(
     primaryGenreName = primaryGenreName,
     country = country,
     previewUrl = previewUrl,
-    isFavorite = isFavorite
 )
 
 fun TrackDataTdo.toTrackData() = TrackData(

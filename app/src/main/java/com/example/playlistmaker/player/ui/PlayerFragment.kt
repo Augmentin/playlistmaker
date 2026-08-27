@@ -78,11 +78,7 @@ class PlayerFragment : Fragment() {
         binding.durationValue.text = track.trackTimeMillis?.let {
             dateFormat.format(it)
         } ?: "00:00"
-        if(trackData.isFavorite){
-            binding.likeButton.setImageResource(R.drawable.active_like)
-        }else{
-            binding.likeButton.setImageResource(R.drawable.unactive_like)
-        }
+
         if(track.collectionName.isNullOrEmpty()){
             binding.albumValue.isVisible =  false
             binding.album.isVisible =  false

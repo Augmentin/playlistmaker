@@ -19,7 +19,7 @@ val repositoryModule = module {
         )
     }
     single<TrackRepository> {
-        TrackRepositoryImpl(get(), get())
+        TrackRepositoryImpl(get())
     }
 
     factory { TrackDbConvertors() }

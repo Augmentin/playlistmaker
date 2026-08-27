@@ -156,8 +156,6 @@ class SearchFragment  : Fragment() {
                 historyListModel.size() > 0 && hasFocus && binding.inputEditText.text.isEmpty()
 
         }
-        viewModel.updateFavorites()
-        historyListModel.updateFavorites()
     }
 
     override fun onDestroyView() {
@@ -165,12 +163,6 @@ class SearchFragment  : Fragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-
-     //   viewModel.updateFavorites()
-      //  historyListModel.updateFavorites()
-    }
      fun hideKeyboard() {
         val imm = requireContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

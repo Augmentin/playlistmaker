@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 
-class TrackRepositoryImpl(private val networkClient: NetworkClient,
-                          private val favoritesTracksRepository: FavoritesTracksRepository): TrackRepository {
+class TrackRepositoryImpl(private val networkClient: NetworkClient): TrackRepository {
 
 
     override fun searchTracks(expression: String): Flow<Resource<List<TrackData>>> = flow {
@@ -23,20 +22,9 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient,
                 emit(Resource.Error("Сеть недоступна или произошла ошибка соединения", response.resultCode))
             }
             200 -> {
-                val  tracks = (response as TrackSearchResponse)
+                emit(  Resource.Success((response as TrackSearchResponse)
                     .results
-                    .map { it.toTrackData() }
-                val favoriteIds = favoritesTracksRepository.getExistTracks(
-                    tracksIds = tracks.map { it.trackId }
-                )
-                    .first()
-                    .toHashSet()
-                val result = tracks.map { track ->
-                    track.copy(
-                        isFavorite = track.trackId in favoriteIds
-                    )
-                }
-                emit(  Resource.Success(result))
+                    .map { it.toTrackData() }))
             }
             else -> {
                 emit( Resource.Error("Неизвестная ошибка", 0))

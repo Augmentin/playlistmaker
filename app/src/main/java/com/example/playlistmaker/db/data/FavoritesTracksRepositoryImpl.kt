@@ -3,6 +3,7 @@ package com.example.playlistmaker.db.data
 import com.example.playlistmaker.db.data.convertors.TrackDbConvertors
 import com.example.playlistmaker.db.data.entity.TrackEntity
 import com.example.playlistmaker.db.domain.api.FavoritesTracksRepository
+import com.example.playlistmaker.search.data.toTrackData
 import com.example.playlistmaker.search.data.toTrackDataEntity
 import com.example.playlistmaker.search.domain.models.TrackData
 import kotlinx.coroutines.flow.Flow
@@ -18,17 +19,25 @@ class FavoritesTracksRepositoryImpl(
         emit(convertFromTracksEntity(tracks))
     }
 
-    override suspend fun deleteFavoriteTrack(track: TrackData) {
-        appDatabase.movieDao().deleteTrack(track.toTrackDataEntity())
+    override suspend fun deleteFavoriteTrack(trackId: String) {
+        appDatabase.movieDao().deleteTrack(trackId)
     }
 
     override suspend fun insertTracks(list: List<TrackData>){
         appDatabase.movieDao().insertTracks(convertFromTracksData(list))
     }
 
+    override suspend fun insertTrack(track: TrackData) {
+        appDatabase.movieDao().insertTrack(track.toTrackDataEntity())
+    }
+
     override fun getExistTracks(tracksIds: List<String>): Flow<List<String>>  = flow {
         val tracksIds = appDatabase.movieDao().getExistIds(tracksIds)
         emit(tracksIds)
+    }
+
+    override suspend fun getExistTrack(tracksId: String): TrackData? {
+       return appDatabase.movieDao().getExistTrack(tracksId)?.toTrackData()
     }
 
     private fun convertFromTracksData(tracks: List<TrackData>): List<TrackEntity>{

@@ -17,8 +17,7 @@ import com.example.playlistmaker.util.Debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val context: Context, private val tracksInteractor: TrackInteractor,
-                      private val  favoritesTracksInteractor: FavoritesTracksInteractor ): ViewModel()  {
+class SearchViewModel(private val context: Context, private val tracksInteractor: TrackInteractor): ViewModel()  {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
@@ -49,27 +48,6 @@ class SearchViewModel(private val context: Context, private val tracksInteractor
 
     }
 
-    fun updateFavorites() {
-        val currentState = stateLiveData.value as? SearchState.Content ?: return
-        val currentTracks = currentState.tracks
-
-        if (currentTracks.isEmpty()) return
-        viewModelScope.launch {
-            val favoriteIds = favoritesTracksInteractor
-                .getExistTracks(currentTracks.map { it.trackId })
-                .first()
-                .toHashSet()
-
-            val updatedTracks = currentTracks.map { track ->
-                track.copy(
-                    isFavorite = track.trackId in favoriteIds
-                )
-            }
-            renderState(
-                SearchState.Content(updatedTracks)
-            )
-        }
-    }
     fun searchNow(changedText: String){
         this.latestSearchText = changedText
         searchRequest( changedText)

@@ -68,10 +68,7 @@ class FavouritesTracksFragment: Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-       // viewModel.update()
-    }
+
     fun showContent(requestedTrackList: List<TrackData>){
         binding.songItems.isVisible = true
         adapter.trackList.clear()

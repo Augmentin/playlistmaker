@@ -24,7 +24,7 @@ class PlayerViewModel(
 ) : ViewModel() {
 
     private var timerJob: Job? = null
-    private val favoriteState = MutableLiveData(trackData.isFavorite)
+    private val favoriteState = MutableLiveData(false)
 
     fun observeFavoriteState(): LiveData<Boolean> = favoriteState
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
@@ -32,6 +32,7 @@ class PlayerViewModel(
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     init {
         initMediaPlayer()
+        updateFavorite()
     }
 
     override fun onCleared() {
@@ -39,6 +40,17 @@ class PlayerViewModel(
         releasePlayer()
     }
 
+    fun updateFavorite(){
+        viewModelScope.launch {
+            val favoriteTrack: TrackData? =
+                favoritesTracksInteractor.getExistTrack(trackData.trackId)
+
+            val isFavorite = favoriteTrack != null
+            favoriteState.value = isFavorite
+
+        }
+
+    }
     fun onPause() {
         pausePlayer()
     }
@@ -64,7 +76,7 @@ class PlayerViewModel(
         }else{
             favoriteState.value = true;
             viewModelScope.launch {
-                favoritesTracksInteractor.insertTracks(listOf(trackData))
+                favoritesTracksInteractor.insertTrack(trackData)
             }
         }
     }
