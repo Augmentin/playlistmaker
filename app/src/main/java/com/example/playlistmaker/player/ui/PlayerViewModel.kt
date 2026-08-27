@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.db.domain.api.FavoritesTracksInteractor
 import com.example.playlistmaker.search.domain.models.TrackData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,15 +17,22 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer: MediaPlayer) : ViewModel() {
+class PlayerViewModel(
+    private val trackData: TrackData,
+    private val mediaPlayer: MediaPlayer,
+    private val favoritesTracksInteractor: FavoritesTracksInteractor
+) : ViewModel() {
 
     private var timerJob: Job? = null
+    private val favoriteState = MutableLiveData(false)
 
+    fun observeFavoriteState(): LiveData<Boolean> = favoriteState
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerState
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     init {
         initMediaPlayer()
+        updateFavorite()
     }
 
     override fun onCleared() {
@@ -32,6 +40,17 @@ class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer
         releasePlayer()
     }
 
+    fun updateFavorite(){
+        viewModelScope.launch {
+            val favoriteTrack: TrackData? =
+                favoritesTracksInteractor.getExistTrack(trackData.trackId)
+
+            val isFavorite = favoriteTrack != null
+            favoriteState.value = isFavorite
+
+        }
+
+    }
     fun onPause() {
         pausePlayer()
     }
@@ -44,6 +63,21 @@ class PlayerViewModel(private val trackData: TrackData,  private val mediaPlayer
                 startPlayer()
             }
             else -> { }
+        }
+    }
+
+    fun onClickLike(){
+        if(favoriteState.value == true){
+            favoriteState.value = false;
+            viewModelScope.launch {
+                favoritesTracksInteractor.deleteFavoriteTrack(trackData)
+            }
+
+        }else{
+            favoriteState.value = true;
+            viewModelScope.launch {
+                favoritesTracksInteractor.insertTrack(trackData)
+            }
         }
     }
 

@@ -36,7 +36,7 @@ class SearchFragment  : Fragment() {
     private var current_search: String = STRING_DEF
 
     companion object {
-        const val SEARCH_STRING = "SEARCH_STRING"
+
         const val STRING_DEF = ""
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
@@ -50,9 +50,6 @@ class SearchFragment  : Fragment() {
     private lateinit var onTrackClickDebounce: (TrackData) -> Unit
     private lateinit var onHistoryClickDebounce: (TrackData) -> Unit
     private lateinit var historyAdapter: SongListAdapter
-
-
-
 
 
 
@@ -160,24 +157,12 @@ class SearchFragment  : Fragment() {
 
         }
     }
-    /*
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        //Log.i("onSaveInstanceState", current_search)
-        outState.putString(SearchActivity.Companion.SEARCH_STRING, current_search)
-    }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        current_search = savedInstanceState.getString(
-            SearchActivity.Companion.SEARCH_STRING,
-            SearchActivity.Companion.STRING_DEF
-        )
-    }*/
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
      fun hideKeyboard() {
         val imm = requireContext()
             .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

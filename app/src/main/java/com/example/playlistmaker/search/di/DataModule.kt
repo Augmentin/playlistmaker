@@ -2,6 +2,8 @@ package com.example.playlistmaker.search.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
+import com.example.playlistmaker.db.data.AppDatabase
 import com.example.playlistmaker.preferences.PreferencesConstants
 import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.network.ItunesClient
@@ -28,4 +30,8 @@ val dataModule = module {
             )
     }
 
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
+    }
 }

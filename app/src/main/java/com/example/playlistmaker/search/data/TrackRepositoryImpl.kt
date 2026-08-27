@@ -1,11 +1,14 @@
 package com.example.playlistmaker.search.data
 
+import android.util.Log
 import com.example.playlistmaker.creator.Resource
+import com.example.playlistmaker.db.domain.api.FavoritesTracksRepository
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.dto.TrackSearchResponse
 import com.example.playlistmaker.search.domain.api.TrackRepository
 import com.example.playlistmaker.search.domain.models.TrackData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 
@@ -19,9 +22,9 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient): TrackReposi
                 emit(Resource.Error("Сеть недоступна или произошла ошибка соединения", response.resultCode))
             }
             200 -> {
-                emit( Resource.Success((response as TrackSearchResponse).results.map {
-                    it.toTrackData()
-                }))
+                emit(  Resource.Success((response as TrackSearchResponse)
+                    .results
+                    .map { it.toTrackData() }))
             }
             else -> {
                 emit( Resource.Error("Неизвестная ошибка", 0))

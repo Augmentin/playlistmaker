@@ -10,7 +10,7 @@ import org.koin.dsl.module
 val medialibraryViewModelModule = module {
 
     viewModel {
-        FavouritesModel(androidContext())
+        FavouritesModel(get())
     }
 
     viewModel {
