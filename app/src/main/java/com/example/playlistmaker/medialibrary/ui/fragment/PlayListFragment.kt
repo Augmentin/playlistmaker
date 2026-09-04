@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
 import com.example.playlistmaker.medialibrary.ui.view_model.PlayListModel
@@ -35,6 +37,11 @@ class PlayListFragment: Fragment() {
         playlistModel.observeState().observe(viewLifecycleOwner) {
             rander(it);
         }
+        binding.newPlaylist.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_createPlaylistFragment,
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -53,6 +60,7 @@ class PlayListFragment: Fragment() {
     }
 
     fun showEmpty(massage: String, img: Int){
+        binding.songItems.isVisible = false
         binding.newPlaylist.isVisible = true
         binding.failImg.isVisible = true
         binding.placeholderTitle.isVisible = true

@@ -20,5 +20,7 @@
         <item name="black_white">@color/white</item>
         <item name="white_black">@color/black_2</item>
         <item name="grey2_gray4">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="white_gray">@color/white</item>
     </style>
 </resources>

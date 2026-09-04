@@ -15,29 +15,20 @@ class FavoritesTracksRepositoryImpl(
 ): FavoritesTracksRepository {
 
     override fun favoritesTracks(): Flow<List<TrackData>>  = flow {
-        val tracks = appDatabase.movieDao().getTracks();
+        val tracks = appDatabase.movieDao().getFavoriteTracks();
         emit(convertFromTracksEntity(tracks))
     }
 
-    override suspend fun deleteFavoriteTrack(trackId: String) {
-        appDatabase.movieDao().deleteTrack(trackId)
+    override suspend fun deleteFavoriteTrack(track: String) {
+        appDatabase.movieDao().removeTrackFromFavorites(track)
     }
 
-    override suspend fun insertTracks(list: List<TrackData>){
-        appDatabase.movieDao().insertTracks(convertFromTracksData(list))
+    override suspend fun insertFavoriteTrack(track: TrackData) {
+        appDatabase.movieDao().addTrackToFavorites(track.toTrackDataEntity(favorite=true))
     }
 
-    override suspend fun insertTrack(track: TrackData) {
-        appDatabase.movieDao().insertTrack(track.toTrackDataEntity())
-    }
-
-    override fun getExistTracks(tracksIds: List<String>): Flow<List<String>>  = flow {
-        val tracksIds = appDatabase.movieDao().getExistIds(tracksIds)
-        emit(tracksIds)
-    }
-
-    override suspend fun getExistTrack(tracksId: String): TrackData? {
-       return appDatabase.movieDao().getExistTrack(tracksId)?.toTrackData()
+    override suspend fun getExistFavoriteTrack(tracksId: String): TrackData? {
+       return appDatabase.movieDao().getExistFavoriteTrack(tracksId)?.toTrackData()
     }
 
     private fun convertFromTracksData(tracks: List<TrackData>): List<TrackEntity>{

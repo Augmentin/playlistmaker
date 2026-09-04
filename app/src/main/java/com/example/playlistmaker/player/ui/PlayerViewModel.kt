@@ -1,8 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,7 +41,7 @@ class PlayerViewModel(
     fun updateFavorite(){
         viewModelScope.launch {
             val favoriteTrack: TrackData? =
-                favoritesTracksInteractor.getExistTrack(trackData.trackId)
+                favoritesTracksInteractor.getExistFavoriteTrack(trackData.trackId)
 
             val isFavorite = favoriteTrack != null
             favoriteState.value = isFavorite
@@ -76,7 +74,7 @@ class PlayerViewModel(
         }else{
             favoriteState.value = true;
             viewModelScope.launch {
-                favoritesTracksInteractor.insertTrack(trackData)
+                favoritesTracksInteractor.insertFavoriteTrack(trackData)
             }
         }
     }

@@ -18,5 +18,6 @@
         <item name="black_white">@color/black_2</item>
         <item name="white_black">@color/white</item>
         <item name="grey2_gray4">@color/black_2</item>
+        <item name="white_gray">@color/gray3</item>
     </style>
 </resources>

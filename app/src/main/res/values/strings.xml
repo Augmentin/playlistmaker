@@ -4,6 +4,8 @@
     <string name="search" translatable="false">Поиск</string>
     <string name="media" translatable="false">Медиатека</string>
     <string name="settings" translatable="false">Настройки</string>
+    <string name="playlist_name" translatable="false">Название*</string>
+    <string name="playlist_description" translatable="false">Описание</string>
     <string name="settings_dark_theme"  translatable="false" >Темная тема</string>
     <string name="settings_share_app"  translatable="false" >Поделиться приложением</string>
     <string name="settings_support"  translatable="false" >Написать в поддержку</string>
@@ -31,6 +33,7 @@
     <string name="empty_favorites" translatable="false">Ваша медиатека пуста</string>
     <string name="empty_playlist" translatable="false">Вы не создали ни одного плейлиста</string>
     <string name="new_playlist" translatable="false">Новый плейлист</string>
+    <string name="create" translatable="false">Создать</string>
     <string name="fav_tabs" translatable="false">Избранные треки</string>
     <string name="playlist_tabs" translatable="false">Плейлисты</string>
 </resources>

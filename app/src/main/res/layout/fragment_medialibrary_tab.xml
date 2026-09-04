@@ -40,6 +40,7 @@
             android:id="@+id/songItems"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         <ImageView
             android:id="@+id/fail_img"
