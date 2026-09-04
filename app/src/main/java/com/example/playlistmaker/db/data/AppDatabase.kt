@@ -20,7 +20,7 @@ import com.example.playlistmaker.db.data.entity.TrackEntity
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun movieDao(): TrackDao
+    abstract fun trackDao(): TrackDao
 
     abstract fun playlistDao(): PlaylistDao
     companion object {
@@ -52,7 +52,16 @@ abstract class AppDatabase : RoomDatabase() {
             ON tracks(favorite)
             """.trimIndent()
                 )
-
+                database.execSQL(
+                    """
+    CREATE TABLE IF NOT EXISTS playlist_table (
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        name TEXT NOT NULL,
+        imagePath TEXT,
+        description TEXT
+    )
+    """.trimIndent()
+                )
                 database.execSQL(
                     """
             CREATE TABLE IF NOT EXISTS playlist_tracks (

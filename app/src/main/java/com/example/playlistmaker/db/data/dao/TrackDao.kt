@@ -55,9 +55,6 @@ interface TrackDao {
     )
     suspend fun deleteTrackIfUnused(trackId: String)
 
-    @Query("DELETE FROM tracks WHERE id = :trackId")
-    suspend fun deleteTrack(trackId: String)
-
     @Query("SELECT * FROM tracks WHERE favorite=1 ORDER BY created DESC")
     suspend fun getFavoriteTracks(): List<TrackEntity>
 

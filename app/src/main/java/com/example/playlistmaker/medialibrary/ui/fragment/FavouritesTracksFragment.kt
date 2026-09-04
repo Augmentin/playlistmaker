@@ -27,7 +27,7 @@ import kotlin.getValue
 
 class FavouritesTracksFragment: Fragment() {
 
-    private val favouritesTracksModel: FavouritesModel by viewModel()
+
     private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: SongListAdapter

@@ -15,20 +15,20 @@ class FavoritesTracksRepositoryImpl(
 ): FavoritesTracksRepository {
 
     override fun favoritesTracks(): Flow<List<TrackData>>  = flow {
-        val tracks = appDatabase.movieDao().getFavoriteTracks();
+        val tracks = appDatabase.trackDao().getFavoriteTracks();
         emit(convertFromTracksEntity(tracks))
     }
 
     override suspend fun deleteFavoriteTrack(track: String) {
-        appDatabase.movieDao().removeTrackFromFavorites(track)
+        appDatabase.trackDao().removeTrackFromFavorites(track)
     }
 
     override suspend fun insertFavoriteTrack(track: TrackData) {
-        appDatabase.movieDao().addTrackToFavorites(track.toTrackDataEntity(favorite=true))
+        appDatabase.trackDao().addTrackToFavorites(track.toTrackDataEntity(favorite=true))
     }
 
     override suspend fun getExistFavoriteTrack(tracksId: String): TrackData? {
-       return appDatabase.movieDao().getExistFavoriteTrack(tracksId)?.toTrackData()
+       return appDatabase.trackDao().getExistFavoriteTrack(tracksId)?.toTrackData()
     }
 
     private fun convertFromTracksData(tracks: List<TrackData>): List<TrackEntity>{
