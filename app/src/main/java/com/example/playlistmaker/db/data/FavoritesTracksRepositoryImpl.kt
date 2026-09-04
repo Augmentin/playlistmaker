@@ -24,7 +24,7 @@ class FavoritesTracksRepositoryImpl(
     }
 
     override suspend fun insertFavoriteTrack(track: TrackData) {
-        appDatabase.trackDao().addTrackToFavorites(track.toTrackDataEntity(favorite=true))
+        appDatabase.trackDao().upsertFavoriteTrack(track.toTrackDataEntity(favorite=true))
     }
 
     override suspend fun getExistFavoriteTrack(tracksId: String): TrackData? {

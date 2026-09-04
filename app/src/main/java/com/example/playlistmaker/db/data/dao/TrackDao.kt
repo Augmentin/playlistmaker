@@ -6,19 +6,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import com.example.playlistmaker.db.data.entity.TrackEntity
 
 @Dao
 interface TrackDao {
 
-    @Transaction
-    suspend fun addTrackToFavorites(track: TrackEntity) {
-        insertTrackIfAbsent(track)
-        updateFavorite(
-            trackId = track.id,
-            favorite = true,
-        )
-    }
+
+    @Upsert
+    suspend fun upsertFavoriteTrack(track: TrackEntity)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrackIfAbsent(track: TrackEntity)
     @Query(
