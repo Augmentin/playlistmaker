@@ -63,6 +63,7 @@
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/image">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nameEditText"
             style="@style/PlaylistInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,7 +99,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             style="@style/PlaylistInputText"
-
+            android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
