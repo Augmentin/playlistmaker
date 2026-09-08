@@ -4,8 +4,9 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
 
-class NewPlaylistModel: ViewModel() {
+class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor): ViewModel() {
 
     private val stateLiveData = MutableLiveData<NewPlaylistState>()
     fun observeState(): LiveData<NewPlaylistState> = stateLiveData
