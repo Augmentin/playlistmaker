@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.activity.result.PickVisualMediaRequest
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.databinding.FragmentCreateplaylistBinding
 import com.example.playlistmaker.medialibrary.ui.view_model.NewPlaylistModel
+import com.example.playlistmaker.medialibrary.ui.view_model.NewPlaylistState
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -81,9 +83,45 @@ class CreatePlaylistFragment : Fragment() {
         binding.newPlaylist.setOnClickListener {
             viewModel.save()
         }
+        viewModel.observeState().observe(viewLifecycleOwner) { state ->
+            renderState(state)
+        }
     }
 
+    private fun renderState(state: NewPlaylistState) {
+        when (state) {
+            NewPlaylistState.EmptyRequiredFields -> {
+                binding.newPlaylist.isEnabled = false
+            }
 
+            NewPlaylistState.FilledRequiredFields -> {
+                binding.newPlaylist.isEnabled = true
+            }
+
+            NewPlaylistState.Saving -> {
+                binding.newPlaylist.isEnabled = false
+            }
+
+            is NewPlaylistState.Saved -> {
+                Toast.makeText(
+                    requireContext(),
+                    "Плейлист «${state.playlistName}» создан",
+                    Toast.LENGTH_SHORT,
+                ).show()
+
+                findNavController().navigateUp()
+            }
+
+            is NewPlaylistState.Error -> {
+                binding.newPlaylist.isEnabled = true
+                Toast.makeText(
+                    requireContext(),
+                    state.message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

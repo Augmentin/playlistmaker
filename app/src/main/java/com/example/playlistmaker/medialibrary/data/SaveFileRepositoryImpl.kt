@@ -7,6 +7,7 @@ import java.util.UUID
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
+import androidx.core.net.toUri
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -14,20 +15,22 @@ import java.io.IOException
 class SaveFileRepositoryImpl(  private val context: Context ) : SaveFileRepository {
 
 
-    override fun saveImageToInternalStorage(uri: Uri): String {
-        // Получаем приватную папку приложения для изображений
-        val picturesDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            ?: throw IOException("Не удалось получить папку Pictures")
+    override fun saveToInternalStorage(uri: Uri): String {
+        val picturesDirectory = context.getExternalFilesDir(
+            Environment.DIRECTORY_PICTURES
+        ) ?: throw IOException("Не удалось получить папку Pictures")
 
-        // Создаём папку для обложек плейлистов
-        val filePath = File(picturesDirectory, "playlist_covers")
+        val directory = File(
+            picturesDirectory,
+            PLAYLIST_COVERS_DIRECTORY
+        )
 
-        if (!filePath.exists() && !filePath.mkdirs()) {
+        if (!directory.exists() && !directory.mkdirs()) {
             throw IOException("Не удалось создать папку для обложек")
         }
 
-
-        val file = File(filePath, "playlist_cover_${UUID.randomUUID()}.jpg")
+        val fileName = "playlist_cover_${UUID.randomUUID()}.jpg"
+        val file = File(directory, fileName)
 
         val bitmap = context.contentResolver
             .openInputStream(uri)
@@ -36,21 +39,62 @@ class SaveFileRepositoryImpl(  private val context: Context ) : SaveFileReposito
             }
             ?: throw IOException("Не удалось открыть изображение")
 
-        // Сохраняем изображение в JPEG
-        FileOutputStream(file).use { outputStream ->
-            val wasSaved = bitmap.compress(
-                Bitmap.CompressFormat.JPEG,
-                30,
-                outputStream
-            )
+        try {
+            FileOutputStream(file).use { outputStream ->
+                val wasSaved = bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    30,
+                    outputStream
+                )
 
-            if (!wasSaved) {
-                throw IOException("Не удалось сохранить изображение")
+                if (!wasSaved) {
+                    throw IOException("Не удалось сохранить изображение")
+                }
             }
+        } finally {
+            bitmap.recycle()
         }
-        bitmap.recycle()
 
+        return fileName
+    }
 
-        return file.absolutePath
+    override fun getFromInternalStorage(fileName: String): Uri? {
+        if (fileName.isBlank()) {
+            return null
+        }
+
+        val picturesDirectory = context.getExternalFilesDir(
+            Environment.DIRECTORY_PICTURES
+        ) ?: return null
+
+        val directory = File(
+            picturesDirectory,
+            PLAYLIST_COVERS_DIRECTORY
+        )
+
+        val file = File(directory, fileName)
+
+        return if (file.exists()) {
+            file.toUri()
+        } else {
+            null
+        }
+    }
+
+    override fun deleteInternalStorage(fileName: String) {
+        if (fileName.isNotBlank()) {
+            val picturesDirectory = context.getExternalFilesDir(
+                Environment.DIRECTORY_PICTURES
+            )
+            val directory = File(
+                picturesDirectory,
+                PLAYLIST_COVERS_DIRECTORY
+            )
+            val file = File(directory, fileName)
+            file.delete()
+        }
+    }
+    companion object{
+        private const val PLAYLIST_COVERS_DIRECTORY = "playlist_covers"
     }
 }

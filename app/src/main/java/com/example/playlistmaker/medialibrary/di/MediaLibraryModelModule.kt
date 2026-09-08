@@ -2,6 +2,10 @@ package com.example.playlistmaker.medialibrary.di
 
 
 
+import com.example.playlistmaker.db.data.PlaylistRepositoryImpl
+import com.example.playlistmaker.db.domain.api.PlaylistInteractor
+import com.example.playlistmaker.db.domain.api.PlaylistRepository
+import com.example.playlistmaker.db.domain.impl.PlaylistInteractorImpl
 import com.example.playlistmaker.medialibrary.data.SaveFileRepositoryImpl
 import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
 import com.example.playlistmaker.medialibrary.domain.api.SaveFileRepository
@@ -25,7 +29,7 @@ val medialibraryViewModelModule = module {
     }
 
     viewModel<NewPlaylistModel>(){
-        NewPlaylistModel(get())
+        NewPlaylistModel(get(), get())
     }
 
 
@@ -35,5 +39,13 @@ val medialibraryViewModelModule = module {
 
     single<SaveFileRepository>{
         SaveFileRepositoryImpl(androidContext())
+    }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get())
+    }
+
+    factory<PlaylistInteractor>{
+        PlaylistInteractorImpl(get())
     }
 }

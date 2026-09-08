@@ -1,12 +1,17 @@
 package com.example.playlistmaker.medialibrary.ui.view_model
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.db.domain.api.PlaylistInteractor
 import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
+import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
+import kotlinx.coroutines.launch
 
-class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor): ViewModel() {
+class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playlistInteractor: PlaylistInteractor): ViewModel() {
 
     private val stateLiveData = MutableLiveData<NewPlaylistState>()
     fun observeState(): LiveData<NewPlaylistState> = stateLiveData
@@ -30,12 +35,44 @@ class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor): ViewMode
     }
 
     fun setDescription(description: String){
-        this.description = description
+        this.description = description.trim()
     }
 
     fun save(){
-        if(stateLiveData.value is NewPlaylistState.FilledRequiredFields){
+        if (stateLiveData.value !is NewPlaylistState.FilledRequiredFields) {
+            return
+        }
 
+        stateLiveData.value = NewPlaylistState.Saving
+
+        viewModelScope.launch {
+            try {
+                val fileName: String? = image?.let { uri ->
+                    saveFileInteractorImpl.saveToInternalStorage(uri)
+                }
+
+                val createdPlaylist = playlistInteractor.create(
+                    PlaylistModel(
+                        id = null,
+                        name = name,
+                        imageName = fileName,
+                        description = description
+                            .trim()
+                            .takeIf { it.isNotEmpty() },
+                    )
+                )
+
+                stateLiveData.value = NewPlaylistState.Saved(
+                    playlistId = createdPlaylist.id
+                        ?: throw IllegalStateException("Room не вернул id"),
+                    playlistName = createdPlaylist.name,
+                )
+            } catch (exception: Exception) {
+                Log.e("NewPlaylistModel.save", exception.message ?: "Неизвестная ошибка")
+                stateLiveData.value = NewPlaylistState.Error(
+                    message = "Не удалось создать плейлист"
+                )
+            }
         }
     }
 

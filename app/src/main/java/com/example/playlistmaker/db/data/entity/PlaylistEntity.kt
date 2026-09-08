@@ -9,6 +9,6 @@ data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val imagePath: String?,
+    val imageName: String?,
     val description: String?,
 )

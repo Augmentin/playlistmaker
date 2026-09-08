@@ -57,7 +57,7 @@ abstract class AppDatabase : RoomDatabase() {
     CREATE TABLE IF NOT EXISTS playlist_table (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT NOT NULL,
-        imagePath TEXT,
+        imageName TEXT,
         description TEXT
     )
     """.trimIndent()
