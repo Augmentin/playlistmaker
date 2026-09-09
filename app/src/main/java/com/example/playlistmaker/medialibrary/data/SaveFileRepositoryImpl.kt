@@ -8,6 +8,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
 import androidx.core.net.toUri
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -15,7 +17,7 @@ import java.io.IOException
 class SaveFileRepositoryImpl(  private val context: Context ) : SaveFileRepository {
 
 
-    override fun saveToInternalStorage(uri: Uri): String {
+    override suspend  fun saveToInternalStorage(uri: Uri): String = withContext(Dispatchers.IO) {
         val picturesDirectory = context.getExternalFilesDir(
             Environment.DIRECTORY_PICTURES
         ) ?: throw IOException("Не удалось получить папку Pictures")
@@ -55,7 +57,7 @@ class SaveFileRepositoryImpl(  private val context: Context ) : SaveFileReposito
             bitmap.recycle()
         }
 
-        return fileName
+        fileName
     }
 
     override fun getFromInternalStorage(fileName: String): Uri? {
@@ -81,7 +83,7 @@ class SaveFileRepositoryImpl(  private val context: Context ) : SaveFileReposito
         }
     }
 
-    override fun deleteInternalStorage(fileName: String) {
+    override suspend fun deleteInternalStorage(fileName: String)  = withContext(Dispatchers.IO) {
         if (fileName.isNotBlank()) {
             val picturesDirectory = context.getExternalFilesDir(
                 Environment.DIRECTORY_PICTURES

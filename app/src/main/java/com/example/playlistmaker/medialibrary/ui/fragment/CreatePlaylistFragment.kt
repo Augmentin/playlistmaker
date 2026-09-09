@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.playlistmaker.R
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 
@@ -20,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.databinding.FragmentCreateplaylistBinding
 import com.example.playlistmaker.medialibrary.ui.view_model.NewPlaylistModel
 import com.example.playlistmaker.medialibrary.ui.view_model.NewPlaylistState
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,7 +43,6 @@ class CreatePlaylistFragment : Fragment() {
         }
         viewModel.setImage(uri)
         binding.image.setImageURI(uri)
-
     }
 
     override fun onCreateView(
@@ -61,8 +62,22 @@ class CreatePlaylistFragment : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_medialib_title))
+            .setMessage(R.string.dialog_medialib_message)
+            .setNeutralButton(R.string.dialog_medialib_neutral) { dialog, which ->
+                // ничего не делаем
+            }.setPositiveButton(R.string.dialog_medialib_positive) { dialog, which ->
+                findNavController().navigateUp()
+            }
+
         binding.backToolbar.setOnClickListener {
-            findNavController().navigateUp()
+             if(viewModel.isFieldsEmpty()){
+                 findNavController().navigateUp()
+             }else{
+                 confirmDialog.show()
+             }
+
         }
 
         binding.image.setOnClickListener {
@@ -80,9 +95,6 @@ class CreatePlaylistFragment : Fragment() {
             viewModel.setDescription(s.toString())
         }
 
-        binding.newPlaylist.setOnClickListener {
-            viewModel.save()
-        }
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             renderState(state)
         }
@@ -108,6 +120,12 @@ class CreatePlaylistFragment : Fragment() {
                     "Плейлист «${state.playlistName}» создан",
                     Toast.LENGTH_SHORT,
                 ).show()
+                findNavController().previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(
+                        CREATED_PLAYLIST_NAME_KEY,
+                        state.playlistName
+                    )
 
                 findNavController().navigateUp()
             }
@@ -130,6 +148,6 @@ class CreatePlaylistFragment : Fragment() {
 
     companion object {
         private const val PHOTO_PICKER_TAG = "PhotoPicker"
-
+        const val CREATED_PLAYLIST_NAME_KEY = "created_playlist_name"
     }
 }

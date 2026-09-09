@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
@@ -59,7 +60,7 @@ class FavouritesTracksFragment: Fragment() {
             onTrackClickDebounce(track)
         }
 
-
+        binding.songItems.layoutManager = LinearLayoutManager(requireContext())
         binding.songItems.adapter = adapter
 
         viewModel.observeState().observe(viewLifecycleOwner) {

@@ -20,7 +20,9 @@ class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playl
     private var image: Uri? = null
     private var description: String = ""
 
-
+    fun isFieldsEmpty() : Boolean {
+        return name.isBlank() && image == null && description.isBlank()
+    }
     fun setName(name: String){
         this.name = name.trim()
         if(this.name.isNotBlank()){
@@ -46,8 +48,9 @@ class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playl
         stateLiveData.value = NewPlaylistState.Saving
 
         viewModelScope.launch {
+            var fileName: String? = null
             try {
-                val fileName: String? = image?.let { uri ->
+                fileName = image?.let { uri ->
                     saveFileInteractorImpl.saveToInternalStorage(uri)
                 }
 
@@ -69,6 +72,9 @@ class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playl
                 )
             } catch (exception: Exception) {
                 Log.e("NewPlaylistModel.save", exception.message ?: "Неизвестная ошибка")
+                try {
+                    fileName?.let{saveFileInteractorImpl.deleteInternalStorage(fileName = it)}
+                }catch (nothing:Exception){}
                 stateLiveData.value = NewPlaylistState.Error(
                     message = "Не удалось создать плейлист"
                 )

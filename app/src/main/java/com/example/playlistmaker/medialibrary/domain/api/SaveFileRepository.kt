@@ -4,9 +4,9 @@ import android.net.Uri
 
 interface SaveFileRepository {
 
-    fun saveToInternalStorage(uri: Uri): String
+    suspend fun saveToInternalStorage(uri: Uri): String
 
     fun getFromInternalStorage(fileName: String):Uri?
 
-    fun deleteInternalStorage(fileName: String)
+    suspend fun deleteInternalStorage(fileName: String)
 }

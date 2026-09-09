@@ -5,5 +5,6 @@ data class PlaylistModel(
     val name: String,
     val imageName: String?,
     val description: String?,
+    val trackCount: Int = 0,
 ) {
 }

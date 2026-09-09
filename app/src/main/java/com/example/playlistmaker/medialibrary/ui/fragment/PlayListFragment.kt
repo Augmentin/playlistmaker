@@ -4,20 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
-import com.example.playlistmaker.medialibrary.ui.view_model.PlayListModel
-import com.example.playlistmaker.medialibrary.ui.view_model.PlayListState
+import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsModel
+import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 class PlayListFragment: Fragment() {
 
-    private val playlistModel: PlayListModel by viewModel()
+    private val playlistModel: PlaylistsModel by viewModel()
     private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
 
@@ -42,30 +43,56 @@ class PlayListFragment: Fragment() {
                 R.id.action_mediaLibraryFragment_to_createPlaylistFragment,
             )
         }
+        observeCreatedPlaylist()
     }
+    private fun observeCreatedPlaylist() {
+        val savedStateHandle = findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?: return
 
+        savedStateHandle
+            .getLiveData<String>(
+                CreatePlaylistFragment.CREATED_PLAYLIST_NAME_KEY
+            )
+            .observe(viewLifecycleOwner) { playlistName ->
+
+                Toast.makeText(
+                    requireContext(),
+                    "Плейлист «$playlistName» создан",
+                    Toast.LENGTH_SHORT,
+                ).show()
+
+
+               // playlistModel.update()
+
+                savedStateHandle.remove<String>(
+                    CreatePlaylistFragment.CREATED_PLAYLIST_NAME_KEY
+                )
+            }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    fun rander(state: PlayListState){
+    fun rander(state: PlaylistsState){
         when(state){
-            is  PlayListState.Loading -> {}
-            is  PlayListState.Content -> {}
-            is PlayListState.Empty -> {
+            is  PlaylistsState.Loading -> {}
+            is  PlaylistsState.Content -> {}
+            is PlaylistsState.Empty -> {
                 showEmpty(state.message, state.img)
             }
-            is PlayListState.Error -> {}
+            is PlaylistsState.Error -> {}
         }
     }
 
-    fun showEmpty(massage: String, img: Int){
+    fun showEmpty(massage: Int, img: Int){
         binding.songItems.isVisible = false
         binding.newPlaylist.isVisible = true
         binding.failImg.isVisible = true
         binding.placeholderTitle.isVisible = true
         binding.failImg.setImageResource(img)
-        binding.placeholderTitle.text = massage
+        binding.placeholderTitle.text = getString(massage)
     }
 
     companion object {

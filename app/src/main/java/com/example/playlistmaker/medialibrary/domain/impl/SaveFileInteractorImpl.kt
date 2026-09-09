@@ -7,7 +7,7 @@ import com.example.playlistmaker.medialibrary.domain.api.SaveFileRepository
 
 class SaveFileInteractorImpl(val saveFileRepositoryImpl: SaveFileRepository): SaveFileInteractor {
 
-    override fun saveToInternalStorage(uri: Uri): String {
+    override suspend  fun saveToInternalStorage(uri: Uri): String {
         return saveFileRepositoryImpl.saveToInternalStorage(uri)
     }
 
@@ -15,7 +15,7 @@ class SaveFileInteractorImpl(val saveFileRepositoryImpl: SaveFileRepository): Sa
         return saveFileRepositoryImpl.getFromInternalStorage(fileName)
     }
 
-    override fun deleteInternalStorage(fileName: String){
+    override suspend fun deleteInternalStorage(fileName: String){
         return saveFileRepositoryImpl.deleteInternalStorage(fileName)
     }
 }

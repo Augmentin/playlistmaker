@@ -1,6 +1,7 @@
 package com.example.playlistmaker.db.data.convertors
 
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
+import com.example.playlistmaker.db.data.entity.PlaylistWithTrackCount
 import com.example.playlistmaker.db.data.entity.TrackEntity
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 import com.example.playlistmaker.search.data.toTrackData
@@ -21,6 +22,10 @@ class TrackDbConvertors {
     }
 
     fun map(playlistModel: PlaylistEntity): PlaylistModel{
+        return playlistModel.toPlaylistModel()
+    }
+
+    fun map(playlistModel: PlaylistWithTrackCount): PlaylistModel{
         return playlistModel.toPlaylistModel()
     }
 }
