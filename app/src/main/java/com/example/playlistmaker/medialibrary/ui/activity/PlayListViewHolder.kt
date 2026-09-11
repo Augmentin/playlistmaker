@@ -9,17 +9,15 @@ import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.PlaylistItemBinding
 
-import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
+
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 
-class PlaylistViewHolder(private val binding: PlaylistItemBinding, private val saveFileInteractor: SaveFileInteractor) :
+class PlaylistViewHolder(private val binding: PlaylistItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         fun from(
-            parent: ViewGroup,
-            saveFileInteractor: SaveFileInteractor,
-        ): PlaylistViewHolder {
+            parent: ViewGroup): PlaylistViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = PlaylistItemBinding.inflate(
                 inflater,
@@ -29,7 +27,6 @@ class PlaylistViewHolder(private val binding: PlaylistItemBinding, private val s
 
             return PlaylistViewHolder(
                 binding = binding,
-                saveFileInteractor = saveFileInteractor,
             )
         }
     }
@@ -37,14 +34,11 @@ class PlaylistViewHolder(private val binding: PlaylistItemBinding, private val s
 
 
         binding.trackName.text = item.name.trim()
-        binding.trackCount.text = item.trackCount.toString()
+        binding.trackCount.text = item.getTrackCountText()
 
-        val imageUri = item.imageName?.let { fileName ->
-            saveFileInteractor.getFromInternalStorage(fileName)
-        }
 
         Glide.with(binding.artwork)
-            .load(imageUri)
+            .load(item.imageUri)
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.placeholder)
             .centerCrop()

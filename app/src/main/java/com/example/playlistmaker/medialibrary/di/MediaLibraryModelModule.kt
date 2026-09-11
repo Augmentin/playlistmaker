@@ -46,6 +46,6 @@ val medialibraryViewModelModule = module {
     }
 
     factory<PlaylistInteractor>{
-        PlaylistInteractorImpl(get())
+        PlaylistInteractorImpl(get(), get())
     }
 }

@@ -2,13 +2,11 @@ package com.example.playlistmaker.medialibrary.ui.activity
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 
 
 class PlayListAdapter(
     private val onPlaylistClick: PlaylistListener,
-    private val saveFileInteractor: SaveFileInteractor,
 ) : RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var playlist = ArrayList<PlaylistModel>()
@@ -17,7 +15,7 @@ class PlayListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PlaylistViewHolder  = PlaylistViewHolder .from(parent, saveFileInteractor)
+    ): PlaylistViewHolder  = PlaylistViewHolder .from(parent)
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlist[position])

@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
-import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
+
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 import com.example.playlistmaker.medialibrary.ui.activity.PlayListAdapter
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsModel
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsState
-import com.example.playlistmaker.search.domain.models.TrackData
-import org.koin.android.ext.android.inject
+
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -27,7 +26,7 @@ class PlayListFragment: Fragment() {
     private val playlistModel: PlaylistsModel by viewModel()
     private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
-    private val saveFileInteractor: SaveFileInteractor by inject()
+
 
     private lateinit var playlistAdapter: PlayListAdapter
     override fun onCreateView(
@@ -60,7 +59,6 @@ class PlayListFragment: Fragment() {
             onPlaylistClick ={ playlist ->
                 openPlaylist(playlist)
             },
-            saveFileInteractor = saveFileInteractor,
         )
 
         binding.songItems.apply {
