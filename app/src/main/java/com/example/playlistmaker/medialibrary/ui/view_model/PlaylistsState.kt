@@ -11,7 +11,7 @@ sealed interface  PlaylistsState {
     object Loading : PlaylistsState
 
     data class Content(
-        val tracks: List<PlaylistModel>
+        val playlists: List<PlaylistModel>
     ) : PlaylistsState
 
     object Error : PlaylistsState

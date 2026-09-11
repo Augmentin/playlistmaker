@@ -17,6 +17,7 @@ import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 import com.example.playlistmaker.medialibrary.ui.activity.PlayListAdapter
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsModel
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsState
+import com.example.playlistmaker.search.domain.models.TrackData
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
@@ -43,7 +44,7 @@ class PlayListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         playlistModel.observeState().observe(viewLifecycleOwner) {
-            rander(it);
+            render(it);
         }
         binding.newPlaylist.setOnClickListener {
             findNavController().navigate(
@@ -51,8 +52,7 @@ class PlayListFragment: Fragment() {
             )
         }
         observeCreatedPlaylist()
-
-
+        playlistModel.update()
     }
 
     private fun initRecyclerView() {
@@ -67,6 +67,7 @@ class PlayListFragment: Fragment() {
             adapter = playlistAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
         }
+        binding.songItems.isVisible = true
     }
 
     private fun observeCreatedPlaylist() {
@@ -99,17 +100,24 @@ class PlayListFragment: Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    fun rander(state: PlaylistsState){
+    fun render(state: PlaylistsState){
         when(state){
             is  PlaylistsState.Loading -> {}
-            is  PlaylistsState.Content -> {}
+            is  PlaylistsState.Content -> {
+                showContent(state.playlists)
+            }
             is PlaylistsState.Empty -> {
                 showEmpty(state.message, state.img)
             }
             is PlaylistsState.Error -> {}
         }
     }
-
+    fun showContent(requestedTrackList: List<PlaylistModel>){
+        binding.songItems.isVisible = true
+        playlistAdapter.playlist.clear()
+        playlistAdapter.playlist.addAll(requestedTrackList)
+        playlistAdapter.notifyDataSetChanged()
+    }
     fun showEmpty(massage: Int, img: Int){
         binding.songItems.isVisible = false
         binding.newPlaylist.isVisible = true
@@ -124,14 +132,6 @@ class PlayListFragment: Fragment() {
     }
 
     private fun openPlaylist(playlist: PlaylistModel) {
-        // Здесь позже можно открыть экран конкретного плейлиста.
-        //
-        // Например, если в navigation graph будет аргумент playlistId:
-        //
-        // val bundle = bundleOf("playlistId" to playlist.id)
-        // findNavController().navigate(
-        //     R.id.action_mediaLibraryFragment_to_playlistFragment,
-        //     bundle,
-        // )
+
     }
 }

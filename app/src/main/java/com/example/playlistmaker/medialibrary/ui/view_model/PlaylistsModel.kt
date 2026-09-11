@@ -1,6 +1,7 @@
 package com.example.playlistmaker.medialibrary.ui.view_model
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,10 +18,10 @@ class PlaylistsModel(val playlistInteractor: PlaylistInteractor) : ViewModel() {
     fun observeState(): LiveData<PlaylistsState> = stateLiveData
 
     init {
-        loadPlaylists()
+
     }
 
-    fun loadPlaylists() {
+    fun update() {
         viewModelScope.launch {
             playlistInteractor
                 .getPlaylists()
@@ -29,6 +30,7 @@ class PlaylistsModel(val playlistInteractor: PlaylistInteractor) : ViewModel() {
     }
 
     private fun processResult(playlists: List<PlaylistModel>) {
+        Log.d("data_", playlists.toString())
         if (playlists.isEmpty()) {
             renderState(PlaylistsState.Empty())
         } else {

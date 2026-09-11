@@ -2,34 +2,55 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="3dp"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="8dp"
     android:background="@null"
-    card_view:cardElevation="5dp">
+    card_view:cardElevation="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:paddingHorizontal="13dp">
+        android:backgroundTint="@color/white">
+
         <ImageView
             android:id="@+id/artwork"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/placeholder" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/avatars" />
+
         <TextView
             android:id="@+id/trackName"
-            style="@style/SongRow.SongName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="No Reply"/>
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:fontFamily="@font/ys_display_regular"
+            app:layout_constraintTop_toBottomOf="@id/artwork"
+            tools:text="The Beatles" />
+
         <TextView
             android:id="@+id/trackCount"
-            style="@style/SongRow.SongName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="No Reply"/>
-    </LinearLayout>
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:fontFamily="@font/ys_display_regular"
+            app:layout_constraintTop_toBottomOf="@id/trackName"
+            tools:text="15 треков" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>
