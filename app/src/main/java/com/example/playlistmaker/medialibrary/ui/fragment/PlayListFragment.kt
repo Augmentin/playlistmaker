@@ -8,11 +8,16 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
+import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
+import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
+import com.example.playlistmaker.medialibrary.ui.activity.PlayListAdapter
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsModel
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsState
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
@@ -21,7 +26,9 @@ class PlayListFragment: Fragment() {
     private val playlistModel: PlaylistsModel by viewModel()
     private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
+    private val saveFileInteractor: SaveFileInteractor by inject()
 
+    private lateinit var playlistAdapter: PlayListAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +41,7 @@ class PlayListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        initRecyclerView()
         playlistModel.observeState().observe(viewLifecycleOwner) {
             rander(it);
         }
@@ -44,7 +51,24 @@ class PlayListFragment: Fragment() {
             )
         }
         observeCreatedPlaylist()
+
+
     }
+
+    private fun initRecyclerView() {
+        playlistAdapter = PlayListAdapter(
+            onPlaylistClick ={ playlist ->
+                openPlaylist(playlist)
+            },
+            saveFileInteractor = saveFileInteractor,
+        )
+
+        binding.songItems.apply {
+            adapter = playlistAdapter
+            layoutManager = GridLayoutManager(requireContext(), 2)
+        }
+    }
+
     private fun observeCreatedPlaylist() {
         val savedStateHandle = findNavController()
             .currentBackStackEntry
@@ -97,5 +121,17 @@ class PlayListFragment: Fragment() {
 
     companion object {
         fun newInstance() = PlayListFragment()
+    }
+
+    private fun openPlaylist(playlist: PlaylistModel) {
+        // Здесь позже можно открыть экран конкретного плейлиста.
+        //
+        // Например, если в navigation graph будет аргумент playlistId:
+        //
+        // val bundle = bundleOf("playlistId" to playlist.id)
+        // findNavController().navigate(
+        //     R.id.action_mediaLibraryFragment_to_playlistFragment,
+        //     bundle,
+        // )
     }
 }

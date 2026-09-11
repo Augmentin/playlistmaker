@@ -21,9 +21,15 @@ class PlaylistRepositoryImpl(
        return playlist.copy(id = id)
     }
 
-    override fun getPlaylists(): Flow<List<PlaylistModel>>  = flow  {
-        val playlists = appDatabase.playlistDao().getPlaylists()
-        emit(convertFromPlaylistsEntity(playlists))
+    override fun getPlaylists(): Flow<List<PlaylistModel>> {
+        return appDatabase
+            .playlistDao()
+            .getPlaylists()
+            .map { playlists ->
+                playlists.map { playlist ->
+                    trackDbConvertors.map(playlist)
+                }
+            }
     }
 
     private fun convertFromPlaylistsEntity(playlists: List<PlaylistWithTrackCount>): List<PlaylistModel> {
