@@ -21,8 +21,4 @@ sealed interface  TrackToPlaylistsState {
         @DrawableRes val img: Int = R.drawable.not_found,
     ) : TrackToPlaylistsState
 
-    object Opened:TrackToPlaylistsState
-    data class  AlreadyAdded(val playlistName: String):TrackToPlaylistsState
-
-    data class AddedSuccess(val playlistName: String):TrackToPlaylistsState
 }

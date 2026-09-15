@@ -65,5 +65,9 @@
         <item name="android:textSize">@dimen/sp16</item>
         <item name="cornerRadius">4dp</item>
     </style>
+    <style name="PlaylistCoverRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>
 

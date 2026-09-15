@@ -26,7 +26,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 import kotlin.getValue
-
+import androidx.activity.addCallback
 class CreatePlaylistFragment : Fragment() {
 
     private var _binding: FragmentCreateplaylistBinding? = null
@@ -62,23 +62,17 @@ class CreatePlaylistFragment : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_medialib_title))
-            .setMessage(R.string.dialog_medialib_message)
-            .setNeutralButton(R.string.dialog_medialib_neutral) { dialog, which ->
-                // ничего не делаем
-            }.setPositiveButton(R.string.dialog_medialib_positive) { dialog, which ->
-                findNavController().navigateUp()
-            }
+
 
         binding.backToolbar.setOnClickListener {
-             if(viewModel.isFieldsEmpty()){
-                 findNavController().navigateUp()
-             }else{
-                 confirmDialog.show()
-             }
-
+            handleBackPressed()
         }
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner) {
+                handleBackPressed()
+            }
+
 
         binding.image.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -137,6 +131,20 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
+    fun handleBackPressed(){
+        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.dialog_medialib_title))
+            .setMessage(R.string.dialog_medialib_message)
+            .setNeutralButton(R.string.dialog_medialib_neutral) { dialog, which ->
+            }.setPositiveButton(R.string.dialog_medialib_positive) { dialog, which ->
+                findNavController().navigateUp()
+            }
+        if(viewModel.isFieldsEmpty()){
+            findNavController().navigateUp()
+        }else{
+            confirmDialog.show()
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -26,6 +26,7 @@ import com.example.playlistmaker.player.ui.activity.PlayListAdapter
 
 import com.example.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.example.playlistmaker.player.ui.view_model.TrackToPlaylistModel
+import com.example.playlistmaker.player.ui.view_model.TrackToPlaylistsEvent
 import com.example.playlistmaker.player.ui.view_model.TrackToPlaylistsState
 
 import com.example.playlistmaker.search.domain.models.TrackData
@@ -173,6 +174,10 @@ class PlayerFragment : Fragment() {
         trackToPlaylistModel.observeState().observe(viewLifecycleOwner) {
             render(it);
         }
+        trackToPlaylistModel.observeEvent().observe(viewLifecycleOwner) { event ->
+            handleEvent(event)
+        }
+
         initRecyclerView()
         observeCreatedPlaylist()
 
@@ -185,7 +190,6 @@ class PlayerFragment : Fragment() {
                         binding.overlay.visibility = View.GONE
                     }
                     else -> {
-                        trackToPlaylistModel.update()
                         binding.overlay.visibility = View.VISIBLE
                     }
                 }
@@ -237,7 +241,29 @@ class PlayerFragment : Fragment() {
         binding.songItems.isVisible = true
     }
 
+    fun handleEvent(event: TrackToPlaylistsEvent){
+        when (event) {
+            TrackToPlaylistsEvent.Opened -> {
+                bottomSheetBehavior.state = STATE_COLLAPSED
+            }
+            is TrackToPlaylistsEvent.AlreadyAdded -> {
+                Toast.makeText(
+                    requireContext(),
+                    "Трек уже добавлен в плейлист «${event.playlistName}»",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            is TrackToPlaylistsEvent.AddedSuccess -> {
+                Toast.makeText(
+                    requireContext(),
+                    "Добавлено в плейлист «${event.playlistName}»",
+                    Toast.LENGTH_SHORT,
+                ).show()
 
+                bottomSheetBehavior.state = STATE_HIDDEN
+            }
+        }
+    }
     fun render(state: TrackToPlaylistsState){
         when(state){
             is  TrackToPlaylistsState.Loading -> {}
@@ -246,24 +272,6 @@ class PlayerFragment : Fragment() {
             }
             is TrackToPlaylistsState.Empty -> {
                 showEmpty(state.message, state.img)
-            }
-            is TrackToPlaylistsState.Opened -> {
-                bottomSheetBehavior.state = STATE_COLLAPSED
-            }
-            is TrackToPlaylistsState.AlreadyAdded -> {
-                Toast.makeText(
-                    requireContext(),
-                    "Трек уже добавлен в плейлист «${state.playlistName}»",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-            is TrackToPlaylistsState.AddedSuccess -> {
-                Toast.makeText(
-                    requireContext(),
-                    "Добавлено в плейлист «${state.playlistName}»",
-                    Toast.LENGTH_SHORT,
-                ).show()
-                bottomSheetBehavior.state = STATE_HIDDEN
             }
             is TrackToPlaylistsState.Error -> {}
         }

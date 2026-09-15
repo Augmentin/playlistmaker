@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.db.domain.api.PlaylistInteractor
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
-
+import com.example.playlistmaker.util.SingleLiveEvent
 import com.example.playlistmaker.search.domain.models.TrackData
 import kotlinx.coroutines.launch
 
@@ -16,8 +16,13 @@ class TrackToPlaylistModel(val trackData: TrackData, val playlistInteractor: Pla
 
     private val stateLiveData = MutableLiveData<TrackToPlaylistsState>()
     fun observeState(): LiveData<TrackToPlaylistsState> = stateLiveData
+    private val eventLiveData = SingleLiveEvent<TrackToPlaylistsEvent>()
 
+    fun observeEvent(): LiveData<TrackToPlaylistsEvent> = eventLiveData
 
+    init {
+        observePlaylists()
+    }
     fun addTrack(playlistModel: PlaylistModel){
         viewModelScope.launch {
             try {
@@ -28,26 +33,27 @@ class TrackToPlaylistModel(val trackData: TrackData, val playlistInteractor: Pla
                         trackId = trackData.trackId,
                     )
                     if (alreadyAdded) {
-                        renderState(TrackToPlaylistsState.AlreadyAdded(playlistModel.name))
+                        sendEvent(TrackToPlaylistsEvent.AlreadyAdded(playlistModel.name))
                     } else {
                         playlistInteractor.addTrackToPlaylist(
                             playlistId = playlistId,
                             track = trackData,
                         )
-                        renderState(TrackToPlaylistsState.AddedSuccess(playlistModel.name))
+                        sendEvent(TrackToPlaylistsEvent.AddedSuccess(playlistModel.name))
                     }
                 }
             }catch (e: Exception){
                 Log.e("TrackToPlaylist", e.message ?: "Неизвестная ошибка")
+                renderState(TrackToPlaylistsState.Error)
             }
         }
     }
 
     fun openMenu(){
-        renderState(TrackToPlaylistsState.Opened)
+        sendEvent(TrackToPlaylistsEvent.Opened)
     }
 
-    fun update() {
+    fun observePlaylists() {
         viewModelScope.launch {
             playlistInteractor
                 .getPlaylists()
@@ -68,6 +74,8 @@ class TrackToPlaylistModel(val trackData: TrackData, val playlistInteractor: Pla
         stateLiveData.postValue(state)
     }
 
-
+    private fun sendEvent(event: TrackToPlaylistsEvent) {
+        eventLiveData.value = event
+    }
 
 }

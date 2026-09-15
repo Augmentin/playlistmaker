@@ -35,7 +35,11 @@ class PlaylistViewHolder(private val binding: PlaylistItemHorisontalBinding) :
 
 
         binding.trackName.text = item.name.trim()
-        binding.trackCount.text = item.getTrackCountText()
+        binding.trackCount.text = binding.root.resources.getQuantityString(
+                R.plurals.playlist_track_count,
+        item.trackCount,
+        item.trackCount,
+        )
 
 
         Glide.with(binding.artwork)
