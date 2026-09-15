@@ -115,11 +115,7 @@ class CreatePlaylistFragment : Fragment() {
             }
 
             is NewPlaylistState.Saved -> {
-                Toast.makeText(
-                    requireContext(),
-                    "Плейлист «${state.playlistName}» создан",
-                    Toast.LENGTH_SHORT,
-                ).show()
+
                 findNavController().previousBackStackEntry
                     ?.savedStateHandle
                     ?.set(

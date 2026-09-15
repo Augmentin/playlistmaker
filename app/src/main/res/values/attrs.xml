@@ -13,4 +13,5 @@
     <attr name="white_black" format="color" />
     <attr name="grey2_gray4" format="color"/>
     <attr name="white_gray" format="color"/>
+    <attr name="grey_white_2" format="color"></attr>
 </resources>

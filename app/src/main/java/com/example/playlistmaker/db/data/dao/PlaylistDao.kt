@@ -6,7 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
+import com.example.playlistmaker.db.data.entity.PlaylistTracks
 import com.example.playlistmaker.db.data.entity.PlaylistWithTrackCount
+import com.example.playlistmaker.db.data.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,6 +19,23 @@ interface PlaylistDao {
 
     @Update
     suspend fun updatePlaylist(playlist: PlaylistEntity)
+
+    @Query(
+        """
+    SELECT tracks.*
+    FROM tracks
+    INNER JOIN playlist_tracks
+        ON tracks.id = playlist_tracks.trackId
+    WHERE playlist_tracks.playlistId = :playlistId
+      AND playlist_tracks.trackId = :trackId
+    LIMIT 1
+    """
+    )
+    suspend fun getTrack(
+        playlistId: Long,
+        trackId: String,
+    ): TrackEntity?
+
     @Query(
         """
     SELECT 
@@ -36,5 +55,9 @@ interface PlaylistDao {
     @Query("DELETE FROM playlist_table WHERE id = :playlistId")
     suspend fun deletePlaylist(playlistId: Long)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPlaylistTrack(
+        playlistTrack: PlaylistTracks,
+    ): Long
 
 }

@@ -16,9 +16,9 @@ import com.example.playlistmaker.medialibrary.ui.view_model.FavouritesModel
 import com.example.playlistmaker.medialibrary.ui.view_model.FavouritesTracksState
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.TrackData
-import com.example.playlistmaker.search.ui.activity.SearchFragment
+
 import com.example.playlistmaker.search.ui.activity.SongListAdapter
-import com.example.playlistmaker.search.ui.view_model.SearchState
+
 import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
 

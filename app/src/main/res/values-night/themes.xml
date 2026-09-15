@@ -22,5 +22,6 @@
         <item name="grey2_gray4">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="white_gray">@color/white</item>
+        <item name="grey_white_2">@color/white</item>
     </style>
 </resources>

@@ -86,9 +86,6 @@ class PlayListFragment: Fragment() {
                     Toast.LENGTH_SHORT,
                 ).show()
 
-
-               // playlistModel.update()
-
                 savedStateHandle.remove<String>(
                     CreatePlaylistFragment.CREATED_PLAYLIST_NAME_KEY
                 )
@@ -112,6 +109,8 @@ class PlayListFragment: Fragment() {
     }
     fun showContent(requestedTrackList: List<PlaylistModel>){
         binding.songItems.isVisible = true
+        binding.failImg.isVisible = false
+        binding.placeholderTitle.isVisible = false
         playlistAdapter.playlist.clear()
         playlistAdapter.playlist.addAll(requestedTrackList)
         playlistAdapter.notifyDataSetChanged()

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.ui
+package com.example.playlistmaker.player.ui.view_model
 
 import android.media.MediaPlayer
 import android.util.Log
@@ -7,11 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.db.domain.api.FavoritesTracksInteractor
+import com.example.playlistmaker.player.ui.PlayerState
 import com.example.playlistmaker.search.domain.models.TrackData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 import java.text.SimpleDateFormat
 import java.util.Locale
 
