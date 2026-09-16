@@ -132,16 +132,16 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     fun handleBackPressed(){
-        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_medialib_title))
-            .setMessage(R.string.dialog_medialib_message)
-            .setNeutralButton(R.string.dialog_medialib_neutral) { dialog, which ->
-            }.setPositiveButton(R.string.dialog_medialib_positive) { dialog, which ->
-                findNavController().navigateUp()
-            }
         if(viewModel.isFieldsEmpty()){
             findNavController().navigateUp()
         }else{
+            val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.dialog_medialib_title))
+                .setMessage(R.string.dialog_medialib_message)
+                .setNeutralButton(R.string.dialog_medialib_neutral) { dialog, which ->
+                }.setPositiveButton(R.string.dialog_medialib_positive) { dialog, which ->
+                    findNavController().navigateUp()
+                }
             confirmDialog.show()
         }
     }
