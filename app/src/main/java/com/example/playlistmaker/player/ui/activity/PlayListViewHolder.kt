@@ -1,0 +1,55 @@
+package com.example.playlistmaker.player.ui.activity
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+
+import com.example.playlistmaker.R
+
+import com.example.playlistmaker.databinding.PlaylistItemBinding
+import com.example.playlistmaker.databinding.PlaylistItemHorisontalBinding
+
+
+import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
+
+class PlaylistViewHolder(private val binding: PlaylistItemHorisontalBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    companion object {
+        fun from(
+            parent: ViewGroup): PlaylistViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val binding = PlaylistItemHorisontalBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+
+            return PlaylistViewHolder(
+                binding = binding,
+            )
+        }
+    }
+    fun bind(item: PlaylistModel) {
+
+
+        binding.trackName.text = item.name.trim()
+        binding.trackCount.text = binding.root.resources.getQuantityString(
+                R.plurals.playlist_track_count,
+        item.trackCount,
+        item.trackCount,
+        )
+
+
+        Glide.with(binding.artwork)
+            .load(item.imageUri)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .centerCrop()
+            .into(binding.artwork)
+
+    }
+
+
+}

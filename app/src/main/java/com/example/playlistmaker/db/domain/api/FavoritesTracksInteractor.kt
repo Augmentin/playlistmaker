@@ -10,11 +10,8 @@ interface FavoritesTracksInteractor {
 
     suspend fun deleteFavoriteTrack(track : TrackData)
 
-    suspend fun insertTracks(list:List<TrackData>)
 
-    suspend fun insertTrack(track : TrackData)
+    suspend fun insertFavoriteTrack(track : TrackData)
 
-    fun getExistTracks(tracksIds: List<String>): Flow<List<String>>
-
-    suspend fun getExistTrack(tracksId: String): TrackData?
+    suspend fun getExistFavoriteTrack(tracksId: String): TrackData?
 }

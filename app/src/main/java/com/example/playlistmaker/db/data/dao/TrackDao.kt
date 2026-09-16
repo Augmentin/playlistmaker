@@ -5,26 +5,56 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Upsert
 import com.example.playlistmaker.db.data.entity.TrackEntity
 
 @Dao
 interface TrackDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTracks(tracks: List<TrackEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrack(track: TrackEntity)
-    @Query("DELETE FROM favorites_track_table WHERE id = :trackId")
-    suspend fun deleteTrack(trackId: String)
+    @Upsert
+    suspend fun upsertFavoriteTrack(track: TrackEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertTrackIfAbsent(track: TrackEntity)
+    @Query(
+        """
+    UPDATE tracks
+    SET favorite = :favorite
+    WHERE id = :trackId
+    """
+    )
+    suspend fun updateFavorite(
+        trackId: String,
+        favorite: Boolean,
+    )
 
-    @Query("SELECT * FROM favorites_track_table ORDER BY created DESC")
-    suspend fun getTracks(): List<TrackEntity>
+    @Transaction
+    suspend fun removeTrackFromFavorites(trackId: String) {
+        updateFavorite(
+            trackId = trackId,
+            favorite = false,
+        )
+        deleteTrackIfUnused(trackId)
+    }
 
-    @Query("SELECT id FROM favorites_track_table WHERE id IN (:trackIds)")
-    suspend fun getExistIds(trackIds: List<String>): List<String>
+    @Query(
+        """
+        DELETE FROM tracks
+        WHERE id = :trackId
+          AND favorite = 0
+          AND NOT EXISTS (
+              SELECT 1 FROM playlist_tracks
+              WHERE playlist_tracks.trackId = tracks.id
+          )
+        """
+    )
+    suspend fun deleteTrackIfUnused(trackId: String)
+
+    @Query("SELECT * FROM tracks WHERE favorite=1 ORDER BY created DESC")
+    suspend fun getFavoriteTracks(): List<TrackEntity>
 
 
-    @Query("SELECT * FROM favorites_track_table WHERE id = :trackId")
-    suspend fun getExistTrack(trackId: String): TrackEntity?
+    @Query("SELECT * FROM tracks WHERE id = :trackId  AND favorite=1")
+    suspend fun getExistFavoriteTrack(trackId: String): TrackEntity?
 }

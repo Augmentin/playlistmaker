@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 
 import com.example.playlistmaker.databinding.FragmentMedialibraryTabBinding
@@ -15,9 +16,9 @@ import com.example.playlistmaker.medialibrary.ui.view_model.FavouritesModel
 import com.example.playlistmaker.medialibrary.ui.view_model.FavouritesTracksState
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.TrackData
-import com.example.playlistmaker.search.ui.activity.SearchFragment
+
 import com.example.playlistmaker.search.ui.activity.SongListAdapter
-import com.example.playlistmaker.search.ui.view_model.SearchState
+
 import com.example.playlistmaker.util.debounce
 import com.google.gson.Gson
 
@@ -27,7 +28,7 @@ import kotlin.getValue
 
 class FavouritesTracksFragment: Fragment() {
 
-    private val favouritesTracksModel: FavouritesModel by viewModel()
+
     private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: SongListAdapter
@@ -59,7 +60,7 @@ class FavouritesTracksFragment: Fragment() {
             onTrackClickDebounce(track)
         }
 
-
+        binding.songItems.layoutManager = LinearLayoutManager(requireContext())
         binding.songItems.adapter = adapter
 
         viewModel.observeState().observe(viewLifecycleOwner) {

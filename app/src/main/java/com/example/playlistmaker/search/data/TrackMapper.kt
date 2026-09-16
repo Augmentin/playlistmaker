@@ -31,7 +31,9 @@ fun TrackData.toTrackDataTdo() = TrackDataTdo(
     previewUrl = previewUrl
 )
 
-fun TrackData.toTrackDataEntity() = TrackEntity(
+fun TrackData.toTrackDataEntity(
+    favorite: Boolean = false,
+) = TrackEntity(
     id = trackId,
     trackName = trackName,
     artistName = artistName,
@@ -41,7 +43,8 @@ fun TrackData.toTrackDataEntity() = TrackEntity(
     releaseDate = releaseDate,
     primaryGenreName = primaryGenreName,
     country = country,
-    previewUrl = previewUrl
+    previewUrl = previewUrl,
+    favorite = favorite,
 )
 
 fun HistoryTrackTdo.toTrackData() = TrackData(

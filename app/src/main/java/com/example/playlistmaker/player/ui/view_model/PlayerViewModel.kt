@@ -1,19 +1,17 @@
-package com.example.playlistmaker.player.ui
+package com.example.playlistmaker.player.ui.view_model
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.db.domain.api.FavoritesTracksInteractor
+import com.example.playlistmaker.player.ui.PlayerState
 import com.example.playlistmaker.search.domain.models.TrackData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,7 +41,7 @@ class PlayerViewModel(
     fun updateFavorite(){
         viewModelScope.launch {
             val favoriteTrack: TrackData? =
-                favoritesTracksInteractor.getExistTrack(trackData.trackId)
+                favoritesTracksInteractor.getExistFavoriteTrack(trackData.trackId)
 
             val isFavorite = favoriteTrack != null
             favoriteState.value = isFavorite
@@ -76,7 +74,7 @@ class PlayerViewModel(
         }else{
             favoriteState.value = true;
             viewModelScope.launch {
-                favoritesTracksInteractor.insertTrack(trackData)
+                favoritesTracksInteractor.insertFavoriteTrack(trackData)
             }
         }
     }

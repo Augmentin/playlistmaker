@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.room.Room
 import com.example.playlistmaker.db.data.AppDatabase
 import com.example.playlistmaker.preferences.PreferencesConstants
@@ -10,6 +11,7 @@ import com.example.playlistmaker.search.data.network.ItunesClient
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import java.util.concurrent.Executors
 
 val dataModule = module {
 
@@ -31,7 +33,23 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "database.db",
+        )
+            .addMigrations(
+                AppDatabase.MIGRATION_1_2,
+            ).setQueryCallback(
+                { sqlQuery, bindArgs ->
+                    Log.d(
+                        "ROOM_QUERY",
+                        "SQL: $sqlQuery\nARGS: $bindArgs"
+                    )
+                },
+                Executors.newSingleThreadExecutor(),
+            )
             .build()
     }
 }
+
