@@ -40,6 +40,8 @@ class EditPlaylistModel(
         this.playlistImage = image
         if(this.playlistImage !=  modelLiveData.value?.imageUri && this.playlistName.isNotBlank()){
             stateLiveData.postValue(NewPlaylistState.EnableSave)
+        }else{
+            stateLiveData.postValue(NewPlaylistState.DisableSave)
         }
     }
 
@@ -47,6 +49,8 @@ class EditPlaylistModel(
         this.playlistDescription = description.trim()
         if(this.playlistDescription != modelLiveData.value?.description && this.playlistName.isNotBlank()){
             stateLiveData.postValue(NewPlaylistState.EnableSave)
+        }else{
+            stateLiveData.postValue(NewPlaylistState.DisableSave)
         }
     }
 
