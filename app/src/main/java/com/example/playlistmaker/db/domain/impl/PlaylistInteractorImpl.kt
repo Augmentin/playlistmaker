@@ -17,6 +17,10 @@ class PlaylistInteractorImpl(
     override suspend fun create(playlist: PlaylistModel): PlaylistModel{
         return playlistRepository.create(playlist)
     }
+
+    override suspend fun update(playlist: PlaylistModel): PlaylistModel {
+        return playlistRepository.update(playlist).withImageUri()
+    }
     override fun getPlaylists(): Flow<List<PlaylistModel>> {
         return playlistRepository.getPlaylists().map { playlists ->
             playlists.map { playlist ->
@@ -78,4 +82,7 @@ class PlaylistInteractorImpl(
         return copy(imageUri = uri)
     }
 
+    override suspend fun deletePlaylist(playlistId: Long) {
+        playlistRepository.deletePlaylist(playlistId)
+    }
 }

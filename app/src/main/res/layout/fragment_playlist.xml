@@ -193,7 +193,7 @@
             android:layout_marginEnd="14dp"
             android:text="@string/edit"
             android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-            android:id="@+id/edit"
+            android:id="@+id/edit_button"
             style="@style/SettingsPlaylist"
             />
         <com.google.android.material.textview.MaterialTextView
@@ -203,7 +203,7 @@
             android:layout_marginEnd="14dp"
             android:text="@string/delete_playlist"
             android:layout_marginHorizontal="@dimen/main_margin_horizontal"
-            android:id="@+id/delete_playlist"
+            android:id="@+id/delete_playlist_button"
             style="@style/SettingsPlaylist"
             />
     </LinearLayout>

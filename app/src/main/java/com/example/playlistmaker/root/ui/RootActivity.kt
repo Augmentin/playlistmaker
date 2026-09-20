@@ -28,7 +28,8 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.playerFragment,
                 R.id.playlistFragment,
-                R.id.createPlaylistFragment      -> {
+                R.id.createPlaylistFragment,
+                R.id.editPlaylistFragment -> {
                     binding.bottomNavigationView.isVisible = false
                 }
                 else -> {

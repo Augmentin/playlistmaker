@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
+import com.example.playlistmaker.medialibrary.ui.fragment.EditPlaylistFragment
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.player.ui.activity.PlayListAdapter
 import com.example.playlistmaker.playlist.ui.view_model.PlaylistState
@@ -135,14 +136,7 @@ class PlaylistFragment : Fragment() {
         binding.songItems.adapter = adapter
 
         binding.btShare.setOnClickListener {
-            if(playlistViewModel.getTracks().size > 0){
-                val playlist = playlistViewModel.getPlaylist()
-                playlist?.let {
-                    playlistViewModel.share(createPlaylistShareText(it, playlistViewModel.getTracks()))
-                }
-            }else{
-                Toast.makeText(requireContext(), R.string.empty_playlist_share, Toast.LENGTH_SHORT).show()
-            }
+            share()
         }
         binding.more.setOnClickListener {
             playlistViewModel.openMenu()
@@ -164,9 +158,54 @@ class PlaylistFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
         initPlayerRecyclerView()
-
+        initMenuButtons()
     }
 
+    private fun initMenuButtons(){
+        binding.shareButton.setOnClickListener {
+            share()
+        }
+        binding.editButton.setOnClickListener {
+            val playlist = playlistViewModel.getPlaylist()
+            playlist?.id?.let {
+                findNavController().navigate(
+                    R.id.action_playlistFragment_to_editPlaylistFragment,
+                    EditPlaylistFragment.createArgs(it)
+                )
+            }
+        }
+        binding.deletePlaylistButton.setOnClickListener {
+            val playlist = playlistViewModel.getPlaylist()
+            playlist?.let {
+                playlist ->
+                val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.delete_playlist_message, playlist.name))
+                    .setNegativeButton(R.string.no) { dialog, which ->
+                    }.setPositiveButton(R.string.yes) { dialog, which ->
+                        playlist?.id?.let {
+                            playlistViewModel.deletePlaylist(it)
+                            findNavController().popBackStack(
+                                R.id.mediaLibraryFragment,
+                                false
+                            )
+                        }
+                    }
+                confirmDialog.show()
+            }
+
+        }
+    }
+
+    private fun share(){
+        if(playlistViewModel.getTracks().size > 0){
+            val playlist = playlistViewModel.getPlaylist()
+            playlist?.let {
+                playlistViewModel.share(createPlaylistShareText(it, playlistViewModel.getTracks()))
+            }
+        }else{
+            Toast.makeText(requireContext(), R.string.empty_playlist_share, Toast.LENGTH_SHORT).show()
+        }
+    }
     private fun initPlayerRecyclerView() {
         playlistAdapter = PlayListAdapter(
             onPlaylistClick ={ playlist -> }
@@ -183,12 +222,10 @@ class PlaylistFragment : Fragment() {
             is PlaylistState.OpenTracksList -> {
                 bottomSheetMenu.state = STATE_HIDDEN
                 binding.songItems.isEnabled = false
-              //  binding.playlistsBottomSheet.isVisible = true
             }
             is PlaylistState.OpenMenu -> {
                 bottomSheetMenu.state = STATE_COLLAPSED
                 binding.songItems.isEnabled = true
-             //   binding.playlistsBottomSheet.isVisible = false
             }
         }
 

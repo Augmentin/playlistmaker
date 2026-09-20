@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.data.entity.PlaylistTracks
@@ -19,7 +20,7 @@ interface PlaylistDao {
     suspend fun insertPlaylist(playlist: PlaylistEntity): Long
 
     @Update
-    suspend fun updatePlaylist(playlist: PlaylistEntity)
+    suspend fun updatePlaylist(playlist: PlaylistEntity): Int
 
     @Query(
         """
@@ -82,18 +83,57 @@ interface PlaylistDao {
         playlistId: Long,
     ): Flow<PlaylistWithDetails?>
 
-
     @Query(
         """
     DELETE FROM playlist_tracks
     WHERE playlistId = :playlistId AND trackId = :trackId
     """
     )
-    suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: String): Int
+    suspend fun deleteTrackRelation(playlistId: Long, trackId: String): Int
+    @Query(
+        """
+    DELETE FROM tracks
+    WHERE id = :trackId
+      AND favorite = 0
+      AND NOT EXISTS (
+          SELECT 1
+          FROM playlist_tracks
+          WHERE playlist_tracks.trackId = :trackId
+      )
+    """
+    )
+    suspend fun deleteTrackIfUnused(trackId: String)
+
+
+    @Transaction
+    suspend fun deleteTrackFromPlaylist(
+        playlistId: Long,
+        trackId: String,
+    ) {
+        deleteTrackRelation(playlistId, trackId)
+        deleteTrackIfUnused(trackId)
+    }
 
     @Query("DELETE FROM playlist_table WHERE id = :playlistId")
     suspend fun deletePlaylist(playlistId: Long)
 
+    @Query(
+        """
+        DELETE FROM tracks
+        WHERE favorite = 0
+          AND id IN (
+              SELECT pt.trackId
+              FROM playlist_tracks AS pt
+              WHERE pt.playlistId = :playlistId
+                AND NOT EXISTS (
+                    SELECT 1 FROM playlist_tracks AS other
+                    WHERE other.trackId = pt.trackId
+                      AND other.playlistId != :playlistId
+                )
+          )
+        """
+    )
+    suspend fun deleteUnusedPlaylistTracks(playlistId: Long)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPlaylistTrack(
         playlistTrack: PlaylistTracks,

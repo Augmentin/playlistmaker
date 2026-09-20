@@ -219,9 +219,6 @@ class PlayerFragment : Fragment() {
                     Toast.LENGTH_SHORT,
                 ).show()
 
-
-
-
                 savedStateHandle.remove<String>(
                     CreatePlaylistFragment.CREATED_PLAYLIST_NAME_KEY
                 )

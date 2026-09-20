@@ -63,6 +63,12 @@ class PlaylistViewModel(
         }
     }
 
+    fun deletePlaylist(playlistId: Long){
+        viewModelScope.launch {
+            playlistInteractor.deletePlaylist(playlistId)
+        }
+    }
+
     private fun observeTracks(){
         viewModelScope.launch {
             playlistInteractor
