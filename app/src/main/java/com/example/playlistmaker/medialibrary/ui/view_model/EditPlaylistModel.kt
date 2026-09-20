@@ -87,6 +87,7 @@ class EditPlaylistModel(
                 )
 
             } catch (exception: Exception) {
+                stateLiveData.value  =  NewPlaylistState.EnableSave
                 Log.e("NewPlaylistModel.save", exception.message ?: "Неизвестная ошибка")
                 try {
                     fileName?.let{saveFileInteractorImpl.deleteInternalStorage(fileName = it)}
