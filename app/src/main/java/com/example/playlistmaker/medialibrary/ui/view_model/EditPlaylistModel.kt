@@ -94,8 +94,6 @@ class EditPlaylistModel(
                 saveStateLiveData.value = SavePlayListState.Error(
                     message = "Не удалось редактировать плейлист"
                 )
-            }finally {
-                stateLiveData.value  =  NewPlaylistState.EnableSave
             }
         }
     }
