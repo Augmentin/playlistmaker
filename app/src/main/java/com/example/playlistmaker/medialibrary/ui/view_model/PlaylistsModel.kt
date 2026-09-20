@@ -18,10 +18,10 @@ class PlaylistsModel(val playlistInteractor: PlaylistInteractor) : ViewModel() {
     fun observeState(): LiveData<PlaylistsState> = stateLiveData
 
     init {
-
+        observe()
     }
 
-    fun update() {
+    fun observe() {
         viewModelScope.launch {
             playlistInteractor
                 .getPlaylists()

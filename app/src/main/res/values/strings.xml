@@ -41,4 +41,11 @@
     <string name="dialog_medialib_neutral" translatable="false">Отмена</string>
     <string name="dialog_medialib_positive" translatable="false">Завершить</string>
     <string name="add_to_playlist" translatable="false">Добавить в плейлист</string>
+    <string name="delete_track_message"  translatable="false" >Хотите удалить трек?</string>
+    <string name="yes"  translatable="false">ДА</string>
+    <string name="no"  translatable="false" >НЕТ</string>
+    <string name="share"  translatable="false" >Поделиться</string>
+    <string name="edit"  translatable="false" >Редактировать информацию</string>
+    <string name="delete_playlist"  translatable="false" >Удалить плейлист</string>
+    <string name="empty_playlist_share" translatable="false">В этом плейлисте нет списка треков, которым можно поделиться</string>
 </resources>

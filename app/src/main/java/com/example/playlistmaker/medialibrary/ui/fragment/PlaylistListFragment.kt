@@ -57,17 +57,19 @@ class PlaylistListFragment: Fragment() {
             )
         }
         observeCreatedPlaylist()
-        playlistModel.update()
+
     }
 
     private fun initRecyclerView() {
         onPlaylistClickDebounce = debounce<PlaylistModel>(
             CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false)
         { playlist ->
-            findNavController().navigate(
-                R.id.action_mediaLibraryFragment_to_playlistFragment,
-                PlaylistFragment.createArgs(Gson().toJson(playlist))
-            )
+            playlist.id?.let {
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment_to_playlistFragment,
+                    PlaylistFragment.createArgs(it)
+                )
+            }
         }
 
         playlistAdapter = PlayListAdapter(

@@ -5,8 +5,13 @@
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">22sp</item>
     </style>
-    <style name="ToolbarMainText" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="ToolbarMainText" parent="Widget.MaterialComponents.Toolbar">
         <item name="titleTextAppearance">@style/TitleTextAppearance</item>
         <item name="titleTextColor">?attr/title_text_color</item>
+    </style>
+    <style name="ToolbarPlaylist"  parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextAppearance">@style/TitleTextAppearance</item>
+        <item name="titleTextColor">@color/black_2</item>
+        <item name="navigationIconTint">@color/black_2</item>
     </style>
 </resources>

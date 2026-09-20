@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.data.entity.PlaylistTracks
+import com.example.playlistmaker.db.data.entity.PlaylistWithDetails
 import com.example.playlistmaker.db.data.entity.PlaylistWithTrackCount
 import com.example.playlistmaker.db.data.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,17 @@ interface PlaylistDao {
 
     @Query(
         """
+    SELECT tracks.*
+    FROM tracks
+    INNER JOIN playlist_tracks
+        ON tracks.id = playlist_tracks.trackId
+    WHERE playlist_tracks.playlistId = :playlistId
+    """
+    )
+    fun getTracks( playlistId: Long): Flow<List<TrackEntity>>
+
+    @Query(
+        """
     SELECT 
         playlist_table.*,
         COUNT(playlist_tracks.trackId) AS trackCount
@@ -49,8 +61,35 @@ interface PlaylistDao {
     """
     )
     fun getPlaylists(): Flow<List<PlaylistWithTrackCount>>
-    @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
-    suspend fun getPlaylist(playlistId: Long): PlaylistEntity?
+
+
+    @Query(
+        """
+    SELECT
+        p.*,
+        COUNT(pt.trackId) AS trackCount,
+        COALESCE(SUM(t.trackTimeMillis), 0) AS totalTracksTime
+    FROM playlist_table AS p
+    LEFT JOIN playlist_tracks AS pt
+        ON p.id = pt.playlistId
+    LEFT JOIN tracks AS t
+        ON pt.trackId = t.id
+    WHERE p.id = :playlistId
+    GROUP BY p.id
+    """
+    )
+    fun getPlaylistById(
+        playlistId: Long,
+    ): Flow<PlaylistWithDetails?>
+
+
+    @Query(
+        """
+    DELETE FROM playlist_tracks
+    WHERE playlistId = :playlistId AND trackId = :trackId
+    """
+    )
+    suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: String): Int
 
     @Query("DELETE FROM playlist_table WHERE id = :playlistId")
     suspend fun deletePlaylist(playlistId: Long)

@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_grey">
+    android:background="@color/light_grey"
+    android:id="@+id/playlist"
+    tools:context=".playlist.ui.fragment.PlaylistFragment"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/arrow_back"
-            style="@style/ToolbarMainText"
+            style="@style/ToolbarPlaylist"
             android:id="@+id/back_toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -122,5 +125,86 @@
             app:layout_constraintTop_toBottomOf="@id/totalTracksTime"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/playlists_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="350dp"
 
+        android:background="@drawable/playlist_tracks"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounder" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:id="@+id/songItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            tools:listitem="@layout/song_cart" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/playlists_bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:behavior_peekHeight="350dp"
+        android:background="@drawable/playlist_tracks"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounder" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:id="@+id/playlist_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:listitem="@layout/playlist_item_horisontal" />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/share"
+            android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+            android:id="@+id/share_button"
+            style="@style/SettingsPlaylist"
+            />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:text="@string/edit"
+            android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+            android:id="@+id/edit"
+            style="@style/SettingsPlaylist"
+            />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:text="@string/delete_playlist"
+            android:layout_marginHorizontal="@dimen/main_margin_horizontal"
+            android:id="@+id/delete_playlist"
+            style="@style/SettingsPlaylist"
+            />
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

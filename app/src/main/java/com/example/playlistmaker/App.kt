@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.playlistmaker.medialibrary.di.medialibraryViewModelModule
 
 import com.example.playlistmaker.player.di.playerViewModelModule
+import com.example.playlistmaker.playlist.di.playlistViewModelModule
 import com.example.playlistmaker.search.di.dataModule
 import com.example.playlistmaker.search.di.interactorModule
 import com.example.playlistmaker.search.di.networkModule
@@ -31,6 +32,7 @@ class App : Application() {
                 viewModelModule,
                 networkModule,
                 playerViewModelModule,
+                playlistViewModelModule,
                 settingsModule,
                 sharingModule,
                 medialibraryViewModelModule

@@ -24,7 +24,15 @@ class PlaylistInteractorImpl(
             }
         }
     }
+    override fun getPlaylistById(id: Long):Flow<PlaylistModel?>{
+        return playlistRepository.getPlaylistById(id).map {
+            it?.withImageUri()
+        }
+    }
 
+    override fun getTracks(playlistId: Long): Flow<List<TrackData>>{
+        return playlistRepository.getTracks(playlistId)
+    }
     override suspend fun getTrack(
         playlistId: Long,
         trackId: String,
@@ -43,6 +51,10 @@ class PlaylistInteractorImpl(
             playlistId = playlistId,
             trackId = trackId,
         ) != null
+    }
+
+    override suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: String) {
+        playlistRepository.deleteTrackFromPlaylist(playlistId, trackId)
     }
 
     override suspend fun addTrackToPlaylist(

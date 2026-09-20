@@ -34,6 +34,24 @@ class PlaylistRepositoryImpl(
             }
     }
 
+    override fun getPlaylistById(id: Long):Flow<PlaylistModel?>{
+        return appDatabase.playlistDao().getPlaylistById(id).map { it?.let { trackDbConvertors.map(it) } }
+    }
+
+    override suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: String) {
+        appDatabase.playlistDao().deleteTrackFromPlaylist(playlistId, trackId)
+    }
+
+    override fun getTracks(playlistId: Long): Flow<List<TrackData>>{
+        return appDatabase
+            .playlistDao()
+            .getTracks(playlistId).map { tracks ->
+                tracks.map { track ->
+                trackDbConvertors.map(track)
+            }
+        }
+    }
+
     override suspend fun getTrack(
         playlistId: Long,
         trackId: String,
