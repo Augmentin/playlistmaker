@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.db.domain.api.PlaylistInteractor
 import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class EditPlaylistModel(
@@ -21,7 +22,7 @@ class EditPlaylistModel(
     private var isImageChanged = false
 
     init {
-        observePlaylist()
+        updatePlaylist()
         saveStateLiveData.value = SavePlayListState.Editing
         stateLiveData.value = NewPlaylistState.DisableSave
     }
@@ -50,12 +51,15 @@ class EditPlaylistModel(
         stateLiveData.value  =  NewPlaylistState.DisableSave
         viewModelScope.launch {
             var fileName: String? = null
+            var newImageName: String? = null
+
             try {
                 val  oldImage = modelLiveData.value?.imageName
                 if(isImageChanged){
                     fileName = playlistImage?.let { uri ->
                         saveFileInteractorImpl.saveToInternalStorage(uri)
                     }
+                    newImageName = fileName
                 }else{
                     fileName = oldImage
                 }
@@ -90,7 +94,7 @@ class EditPlaylistModel(
                 stateLiveData.value  =  NewPlaylistState.EnableSave
                 Log.e("NewPlaylistModel.save", exception.message ?: "Неизвестная ошибка")
                 try {
-                    fileName?.let{saveFileInteractorImpl.deleteInternalStorage(fileName = it)}
+                    newImageName?.let{saveFileInteractorImpl.deleteInternalStorage(fileName = it)}
                 }catch (nothing:Exception){}
                 saveStateLiveData.value = SavePlayListState.Error(
                     message = "Не удалось редактировать плейлист"
@@ -99,11 +103,12 @@ class EditPlaylistModel(
         }
     }
 
-    private fun observePlaylist() {
+    private fun updatePlaylist() {
         viewModelScope.launch {
-            playlistInteractor
+            val playlist = playlistInteractor
                 .getPlaylistById(playlistId)
-                .collect { playlist ->  renderPlaylist(playlist) }
+                .first()
+            renderPlaylist(playlist)
         }
     }
 
