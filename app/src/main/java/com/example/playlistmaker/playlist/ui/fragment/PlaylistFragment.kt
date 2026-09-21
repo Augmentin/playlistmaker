@@ -161,6 +161,10 @@ class PlaylistFragment : Fragment() {
         initMenuButtons()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun initMenuButtons(){
         binding.shareButton.setOnClickListener {
             share()
@@ -264,6 +268,7 @@ class PlaylistFragment : Fragment() {
         playlistAdapter.playlist.addAll(listOf(playlist))
         playlistAdapter.notifyDataSetChanged()
         binding.playlistName.text = playlist.name.trim()
+        binding.playlistDescription.text = playlist.description?.trim()
         binding.trackCount.text = binding.root.resources.getQuantityString(
             R.plurals.playlist_track_count,
             playlist.trackCount,
@@ -274,6 +279,17 @@ class PlaylistFragment : Fragment() {
             playlist.totalTracksTimeMinutes.toInt(),
             playlist.totalTracksTimeMinutes,
         )
+
+        binding.image.apply {
+            setBackgroundResource(
+                if (playlist.imageUri == null) {
+                    R.color.light_grey
+                } else {
+                    R.color.white
+                },
+            )
+        }
+
         Glide.with(binding.image)
             .load(playlist.imageUri)
             .centerCrop()

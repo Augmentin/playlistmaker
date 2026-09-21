@@ -9,8 +9,7 @@
         <item name="titleTextAppearance">@style/TitleTextAppearance</item>
         <item name="titleTextColor">?attr/title_text_color</item>
     </style>
-    <style name="ToolbarPlaylist"  parent="Widget.MaterialComponents.Toolbar">
-        <item name="titleTextAppearance">@style/TitleTextAppearance</item>
+    <style name="ToolbarPlaylist"  parent="ToolbarMainText">
         <item name="titleTextColor">@color/black_2</item>
         <item name="navigationIconTint">@color/black_2</item>
     </style>

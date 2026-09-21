@@ -42,9 +42,10 @@ interface PlaylistDao {
         """
     SELECT tracks.*
     FROM tracks
-    INNER JOIN playlist_tracks
-        ON tracks.id = playlist_tracks.trackId
-    WHERE playlist_tracks.playlistId = :playlistId
+    INNER JOIN playlist_tracks pt
+        ON tracks.id = pt.trackId
+    WHERE pt.playlistId = :playlistId
+    ORDER BY pt.addedAt DESC
     """
     )
     fun getTracks( playlistId: Long): Flow<List<TrackEntity>>
