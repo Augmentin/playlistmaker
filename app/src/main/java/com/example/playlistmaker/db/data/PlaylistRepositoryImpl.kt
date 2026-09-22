@@ -2,6 +2,7 @@ package com.example.playlistmaker.db.data
 
 import androidx.room.withTransaction
 import com.example.playlistmaker.db.data.convertors.TrackDbConvertors
+import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.data.entity.PlaylistTracks
 import com.example.playlistmaker.db.data.entity.PlaylistWithTrackCount
 import com.example.playlistmaker.db.data.entity.TrackEntity
@@ -34,6 +35,32 @@ class PlaylistRepositoryImpl(
             }
     }
 
+    override fun getPlaylistById(id: Long):Flow<PlaylistModel?>{
+        return appDatabase.playlistDao().getPlaylistById(id).map { it?.let { trackDbConvertors.map(it) } }
+    }
+
+    override suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: String) {
+        appDatabase.playlistDao().deleteTrackFromPlaylist(playlistId, trackId)
+
+    }
+
+    override fun getTracks(playlistId: Long): Flow<List<TrackData>>{
+        return appDatabase
+            .playlistDao()
+            .getTracks(playlistId).map { tracks ->
+                tracks.map { track ->
+                trackDbConvertors.map(track)
+            }
+        }
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        appDatabase.withTransaction {
+            appDatabase.playlistDao().deleteUnusedPlaylistTracks(playlistId)
+            appDatabase.playlistDao().deletePlaylist(playlistId)
+        }
+    }
+
     override suspend fun getTrack(
         playlistId: Long,
         trackId: String,
@@ -63,6 +90,13 @@ class PlaylistRepositoryImpl(
             insertedRowId != -1L
         }
     }
+    override suspend fun update(playlist: PlaylistModel): PlaylistModel {
+        appDatabase.playlistDao().updatePlaylist(trackDbConvertors.map(playlist))
+        return playlist
+    }
+
+
+
     private fun convertFromPlaylistsEntity(playlists: List<PlaylistWithTrackCount>): List<PlaylistModel> {
         return playlists.map { playlist -> trackDbConvertors.map(playlist) }
     }

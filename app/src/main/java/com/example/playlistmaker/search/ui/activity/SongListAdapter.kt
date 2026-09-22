@@ -10,7 +10,7 @@ import com.example.playlistmaker.search.domain.models.TrackData
 class SongListAdapter(val clickListener: SongClickListener) :
     RecyclerView.Adapter<SongListViewHolder>() {
     var trackList = ArrayList<TrackData>()
-
+    private  var longClickListener: ((TrackData) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -22,6 +22,19 @@ class SongListAdapter(val clickListener: SongClickListener) :
         holder.itemView.setOnClickListener {
             clickListener.onSongClick(trackList[position])
         }
+
+        longClickListener?.let{
+            listener->
+            holder.itemView.setOnLongClickListener {
+                listener(trackList[position])
+                true
+            }
+        }
+
+    }
+
+    fun setOnLongClickListener(longClickListener: (TrackData) -> Unit){
+        this.longClickListener = longClickListener
     }
 
     override fun getItemCount(): Int {

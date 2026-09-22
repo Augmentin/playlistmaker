@@ -52,7 +52,6 @@ class SearchFragment  : Fragment() {
     private lateinit var historyAdapter: SongListAdapter
 
 
-
     private val viewModel by viewModel<SearchViewModel>()
     private val historyListModel by viewModel<HistoryViewModel>()
 

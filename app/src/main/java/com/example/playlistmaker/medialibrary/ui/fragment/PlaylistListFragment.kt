@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
@@ -17,17 +18,22 @@ import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 import com.example.playlistmaker.medialibrary.ui.activity.PlayListAdapter
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsModel
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsState
+import com.example.playlistmaker.playlist.ui.fragment.PlaylistFragment
+
+import com.example.playlistmaker.util.debounce
+
+import com.google.gson.Gson
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
-class PlayListFragment: Fragment() {
+class PlaylistListFragment: Fragment() {
 
     private val playlistModel: PlaylistsModel by viewModel()
     private var _binding: FragmentMedialibraryTabBinding? = null
     private val binding get() = _binding!!
 
-
+    private lateinit var onPlaylistClickDebounce: (PlaylistModel) -> Unit
     private lateinit var playlistAdapter: PlayListAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,10 +57,21 @@ class PlayListFragment: Fragment() {
             )
         }
         observeCreatedPlaylist()
-        playlistModel.update()
+
     }
 
     private fun initRecyclerView() {
+        onPlaylistClickDebounce = debounce<PlaylistModel>(
+            CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false)
+        { playlist ->
+            playlist.id?.let {
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment_to_playlistFragment,
+                    PlaylistFragment.createArgs(it)
+                )
+            }
+        }
+
         playlistAdapter = PlayListAdapter(
             onPlaylistClick ={ playlist ->
                 openPlaylist(playlist)
@@ -125,10 +142,11 @@ class PlayListFragment: Fragment() {
     }
 
     companion object {
-        fun newInstance() = PlayListFragment()
+        fun newInstance() = PlaylistListFragment()
+        private const val CLICK_DEBOUNCE_DELAY = 700L
     }
 
     private fun openPlaylist(playlist: PlaylistModel) {
-
+        onPlaylistClickDebounce(playlist)
     }
 }

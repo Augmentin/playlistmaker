@@ -1,6 +1,7 @@
 package com.example.playlistmaker.db.data.convertors
 
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
+import com.example.playlistmaker.db.data.entity.PlaylistWithDetails
 import com.example.playlistmaker.db.data.entity.PlaylistWithTrackCount
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 
@@ -30,5 +31,16 @@ fun PlaylistWithTrackCount.toPlaylistModel(): PlaylistModel {
         imageName = playlist.imageName,
         description = playlist.description,
         trackCount = trackCount,
+    )
+}
+
+fun PlaylistWithDetails.toPlaylistModel(): PlaylistModel{
+    return PlaylistModel(
+        id = playlist.id,
+        name = playlist.name,
+        imageName = playlist.imageName,
+        description = playlist.description,
+        trackCount = trackCount,
+        totalTracksTime = totalTracksTime
     )
 }

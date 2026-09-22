@@ -38,7 +38,8 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">@style/TextAppearanceSettings</item>
     </style>
-
+    <style name="SettingsPlaylist" parent="SettingMenuItem">
+    </style>
     <style name="PlaylistInputText">
         <item name="android:textColor">?attr/black_white</item>
         <item name="android:textSize">@dimen/sp16</item>

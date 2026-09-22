@@ -10,6 +10,7 @@ import com.example.playlistmaker.medialibrary.data.SaveFileRepositoryImpl
 import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
 import com.example.playlistmaker.medialibrary.domain.api.SaveFileRepository
 import com.example.playlistmaker.medialibrary.domain.impl.SaveFileInteractorImpl
+import com.example.playlistmaker.medialibrary.ui.view_model.EditPlaylistModel
 import com.example.playlistmaker.medialibrary.ui.view_model.FavouritesModel
 import com.example.playlistmaker.medialibrary.ui.view_model.NewPlaylistModel
 import com.example.playlistmaker.medialibrary.ui.view_model.PlaylistsModel
@@ -32,6 +33,10 @@ val medialibraryViewModelModule = module {
         NewPlaylistModel(get(), get())
     }
 
+
+    viewModel<EditPlaylistModel> { (playlistId: Long) ->
+        EditPlaylistModel(playlistId, get(), get())
+    }
 
     factory <SaveFileInteractor>{
         SaveFileInteractorImpl(get())

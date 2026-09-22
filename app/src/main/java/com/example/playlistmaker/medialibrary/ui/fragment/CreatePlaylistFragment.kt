@@ -27,14 +27,16 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 import kotlin.getValue
 import androidx.activity.addCallback
-class CreatePlaylistFragment : Fragment() {
+import com.example.playlistmaker.medialibrary.ui.view_model.SavePlayListState
 
-    private var _binding: FragmentCreateplaylistBinding? = null
-    private val binding get() = _binding!!
+open class CreatePlaylistFragment : Fragment() {
+
+    protected var _binding: FragmentCreateplaylistBinding? = null
+    protected val binding get() = _binding!!
 
 
-    private val viewModel by viewModel<NewPlaylistModel>()
-    private val pickMedia = registerForActivityResult(
+    protected open val viewModel by viewModel<NewPlaylistModel>()
+    protected val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri == null) {
@@ -92,35 +94,17 @@ class CreatePlaylistFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) { state ->
             renderState(state)
         }
+        viewModel.observeSaveState().observe(viewLifecycleOwner){
+            renderSaveState(it)
+        }
     }
 
-    private fun renderState(state: NewPlaylistState) {
+    protected fun renderSaveState(state: SavePlayListState){
         when (state) {
-            NewPlaylistState.EmptyRequiredFields -> {
-                binding.newPlaylist.isEnabled = false
+            is SavePlayListState.Saved -> {
+                onSaved(state)
             }
-
-            NewPlaylistState.FilledRequiredFields -> {
-                binding.newPlaylist.isEnabled = true
-            }
-
-            NewPlaylistState.Saving -> {
-                binding.newPlaylist.isEnabled = false
-            }
-
-            is NewPlaylistState.Saved -> {
-
-                findNavController().previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(
-                        CREATED_PLAYLIST_NAME_KEY,
-                        state.playlistName
-                    )
-
-                findNavController().navigateUp()
-            }
-
-            is NewPlaylistState.Error -> {
+            is SavePlayListState.Error -> {
                 binding.newPlaylist.isEnabled = true
                 Toast.makeText(
                     requireContext(),
@@ -128,10 +112,34 @@ class CreatePlaylistFragment : Fragment() {
                     Toast.LENGTH_SHORT,
                 ).show()
             }
+
+            else -> {}
+        }
+    }
+    protected fun renderState(state: NewPlaylistState) {
+        when (state) {
+            NewPlaylistState.DisableSave -> {
+                binding.newPlaylist.isEnabled = false
+            }
+            NewPlaylistState.EnableSave -> {
+                binding.newPlaylist.isEnabled = true
+            }
+
         }
     }
 
-    fun handleBackPressed(){
+    protected open fun onSaved(state:  SavePlayListState.Saved){
+        findNavController().previousBackStackEntry
+            ?.savedStateHandle
+            ?.set(
+                CREATED_PLAYLIST_NAME_KEY,
+                state.playlistName
+            )
+
+        findNavController().navigateUp()
+    }
+
+    protected open fun handleBackPressed(){
         if(viewModel.isFieldsEmpty()){
             findNavController().navigateUp()
         }else{

@@ -11,61 +11,67 @@ import com.example.playlistmaker.medialibrary.domain.api.SaveFileInteractor
 import com.example.playlistmaker.medialibrary.domain.model.PlaylistModel
 import kotlinx.coroutines.launch
 
-class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playlistInteractor: PlaylistInteractor): ViewModel() {
+open class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playlistInteractor: PlaylistInteractor): ViewModel() {
 
-    private val stateLiveData = MutableLiveData<NewPlaylistState>()
+    protected val stateLiveData = MutableLiveData<NewPlaylistState>()
     fun observeState(): LiveData<NewPlaylistState> = stateLiveData
+    protected val saveStateLiveData = MutableLiveData<SavePlayListState>()
+    fun observeSaveState(): LiveData<SavePlayListState> = saveStateLiveData
 
-    private var name: String = ""
-    private var image: Uri? = null
-    private var description: String = ""
+    init {
+        saveStateLiveData.value = SavePlayListState.Editing
+        stateLiveData.value = NewPlaylistState.DisableSave
+    }
+    protected var playlistName: String = ""
+    protected var playlistImage: Uri? = null
+    protected var playlistDescription: String = ""
 
     fun isFieldsEmpty() : Boolean {
-        return name.isBlank() && image == null && description.isBlank()
+        return playlistName.isBlank() && playlistImage == null && playlistDescription.isBlank()
     }
-    fun setName(name: String){
-        this.name = name.trim()
-        if(this.name.isNotBlank()){
-            stateLiveData.postValue(NewPlaylistState.FilledRequiredFields)
+    open fun setName(name: String){
+        this.playlistName = name.trim()
+        if(this.playlistName.isNotBlank()){
+            stateLiveData.postValue(NewPlaylistState.EnableSave)
         }else{
-            stateLiveData.postValue(NewPlaylistState.EmptyRequiredFields)
+            stateLiveData.postValue(NewPlaylistState.DisableSave)
         }
     }
 
-    fun setImage(image: Uri){
-        this.image = image
+    open fun setImage(image: Uri){
+        this.playlistImage = image
     }
 
-    fun setDescription(description: String){
-        this.description = description.trim()
+    open fun setDescription(description: String){
+        this.playlistDescription = description.trim()
     }
 
-    fun save(){
-        if (stateLiveData.value !is NewPlaylistState.FilledRequiredFields) {
+    open fun save(){
+        if (stateLiveData.value !is NewPlaylistState.EnableSave) {
             return
         }
 
-        stateLiveData.value = NewPlaylistState.Saving
+        stateLiveData.value  =  NewPlaylistState.DisableSave
 
         viewModelScope.launch {
             var fileName: String? = null
             try {
-                fileName = image?.let { uri ->
+                fileName = playlistImage?.let { uri ->
                     saveFileInteractorImpl.saveToInternalStorage(uri)
                 }
 
                 val createdPlaylist = playlistInteractor.create(
                     PlaylistModel(
                         id = null,
-                        name = name,
+                        name = playlistName,
                         imageName = fileName,
-                        description = description
+                        description = playlistDescription
                             .trim()
                             .takeIf { it.isNotEmpty() },
                     )
                 )
 
-                stateLiveData.value = NewPlaylistState.Saved(
+                saveStateLiveData.value = SavePlayListState.Saved(
                     playlistId = createdPlaylist.id
                         ?: throw IllegalStateException("Room не вернул id"),
                     playlistName = createdPlaylist.name,
@@ -75,9 +81,11 @@ class NewPlaylistModel(val saveFileInteractorImpl: SaveFileInteractor, val playl
                 try {
                     fileName?.let{saveFileInteractorImpl.deleteInternalStorage(fileName = it)}
                 }catch (nothing:Exception){}
-                stateLiveData.value = NewPlaylistState.Error(
+                saveStateLiveData.value = SavePlayListState.Error(
                     message = "Не удалось создать плейлист"
                 )
+            }finally {
+                stateLiveData.value  =  NewPlaylistState.EnableSave
             }
         }
     }
